@@ -30,22 +30,25 @@
 
 分析/评估/判断/预测 → graph_search → sequential-thinking → kanban_create。
 
-## kanban_create 前置协议 (B层注入)
+## kanban B+D 强制层 (代码强制，非文本协议)
 
-每次 kanban_create 前强制执行：
+**每次 kanban_create 前必须执行：**
+```
+python3 ~/.hermes/scripts/bd_layer_enforce.py wrap --domain <domain> --body "<原始body>" --title "<标题>" --assignee <worker>
+→ 返回 enriched_body（已注入教训+成本检查），再用它调 kanban_create
+```
 
-1. **教训注入**: 确定 domain → `read_file(~/.hermes/lessons/{domain}.md)` → 提取 🔴CRITICAL 条目 → 注入到 task body 顶部 `⚠️ 已知陷阱:` + 换行 + lessons 内容
-2. **成本预估**: v4-pro worker → `mcp_cost_guard_query_cost` → 今日成本>$5 降级 flash，>$8 熔断
-3. **指令优化**: P1+任务 → `mcp_prompt_optimizer_optimize` → 优化后指令写入 task body
+**每次 kanban_complete 后必须执行：**
+```
+python3 ~/.hermes/scripts/bd_layer_enforce.py recover --domain <domain> --result "<worker结果文本>"
+→ 自动解析[LESSONS]块，写入lessons文件，升级重复教训
+```
 
-## kanban_complete 后置协议 (D层回收)
-
-Worker 返回的 summary 末尾可能含 [LESSONS] 块。收到后：
-
-1. 解析 `[LESSONS]` → 提取每条 lesson (level/domain/content/context)
-2. 追加到 `~/.hermes/lessons/{domain}.md`
-3. 同条 lesson 已存 ≥2次 → 升级 🔴CRITICAL + QQ Bot 通知
-4. 若未见 [LESSONS] 块 → 无需操作
+**强制机制：**
+- `pre_kanban_create.py` — B层注入：读lessons/→提取🔴CRITICAL→注入body+成本预估
+- `post_kanban_complete.py` — D层回收：解析[LESSONS]→写文件→≥2次升级告警
+- `audit_bd_layer.py` — 每日审计cron：扫描kanban.db，B/D注入率<阈值→QQ Bot告警
+- 对标 delegate_task 时代的 `enforce_delegate.py`，适配 kanban_create 接口
 
 ## 可调度 Worker
 
@@ -103,4 +106,4 @@ Worker 返回的 summary 末尾可能含 [LESSONS] 块。收到后：
 └────────────────────────────────┘
 ```
 
-*强制脚本: `scripts/cost-circuit-breaker.py` `scripts/rule_audit.py` | 域教训: `lessons/` | 退役: ec-domain/writing-domain → `.archived/`*
+*强制脚本: `scripts/bd_layer_enforce.py` `scripts/pre_kanban_create.py` `scripts/post_kanban_complete.py` `scripts/audit_bd_layer.py` `scripts/cost-circuit-breaker.py` `scripts/rule_audit.py` | 域教训: `lessons/` | 退役: ec-domain/writing-domain → `.archived/`*
