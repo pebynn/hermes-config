@@ -1,0 +1,4 @@
+name: decision-guard
+description: "扫描 agent 最终回复，检测 L1/L2 违规（问句/征求意见），记录并阈值通知"
+events:
+  - agent:end

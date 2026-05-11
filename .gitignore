@@ -34,7 +34,6 @@ node/
 mcp-servers/__pycache__/
 scripts/__pycache__/
 migration/
-
 # 密钥/认证
 .env.bak
 auth.json
@@ -69,6 +68,14 @@ agenda/.pipeline_notify
 agenda/state.json
 agenda/task_tracker.json
 agenda/pipelines.json
+models_dev_cache.json
+notify_queue.json
+ollama_cloud_models_cache.json
+pdd_seller_state.json
+personality.md
+processes.json
+tasks.json
+state.db*
 
 # Kanban同步状态
 kanban/gh-*.json
