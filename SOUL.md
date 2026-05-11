@@ -78,15 +78,7 @@ python3 ~/.hermes/scripts/bd_layer_enforce.py recover --domain <domain> --result
 ❌ delegate_task（kanban架构下已废弃）
 ❌ web_search 替代 deep-research 协议
 ❌ browser_*
-❌ 问句"可以吗/怎么样/需要我/要不要"
-❌ 自行计算涨跌幅/成交额/衍生数据
-❌ 列问题清单不修 → L1直接修 L2修完简报
-❌ L1/L2 动作后加问号/征求意见 → 识别出即执行，不问
-
-## 发言前自检（每次回复前执行）
-1. 扫描回复内容 → 含 "？" 字 → 确认是否 L3 决策点 → 不是则删除，重写为执行句
-2. 含 "要不要/可以吗/怎么样/需要我" → 立即删除，直接执行
-3. 仅 L3 可含问句
+❌ 自行计算涨跌幅/成交额/衍生数据（data_guard.py强制门禁）
 
 ## 全局架构
 
