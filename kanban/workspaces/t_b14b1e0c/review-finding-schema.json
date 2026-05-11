@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PR Auto Review Finding Schema",
+  "description": "Structured review finding format for the code-review autonomous fix loop",
+  "type": "object",
+  "required": ["id", "severity", "category", "file", "title", "description", "auto_fixable", "requires_human"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^F\\d{3}$",
+      "description": "Unique finding identifier within a review, e.g. F001"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2", "P3"],
+      "description": "P0=Critical(security), P1=High(performance), P2=Medium(style), P3=Low(logic)"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["security", "performance", "style", "logic"],
+      "description": "Problem category"
+    },
+    "file": {
+      "type": "string",
+      "description": "Relative file path from repo root"
+    },
+    "line": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Line number where the issue was found"
+    },
+    "end_line": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Optional end line for multi-line issues"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short summary of the issue"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed explanation of the issue"
+    },
+    "suggestion": {
+      "type": "string",
+      "description": "Suggested fix or remediation"
+    },
+    "code_snippet": {
+      "type": "string",
+      "description": "The problematic code fragment"
+    },
+    "auto_fixable": {
+      "type": "boolean",
+      "description": "Whether this finding can be automatically fixed by code-domain"
+    },
+    "requires_human": {
+      "type": "boolean",
+      "description": "Whether this finding requires human confirmation even after auto-fix"
+    }
+  },
+  "additionalProperties": false
+}

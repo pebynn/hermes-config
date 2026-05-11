@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EC选品→上架",
+  "description": "ec-sourcing 产出商品数据包，ec-listing 消费生成上架草稿",
+  "version": "v2",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "元信息",
+      "properties": {
+        "stream": { "const": "ec-sourcing-to-listing" },
+        "version": { "const": "v2" },
+        "producer": { "const": "ec-sourcing" },
+        "consumer": { "const": "ec-listing" },
+        "produced_at": { "type": "string", "format": "date-time" },
+        "goods_no": { "type": "string", "description": "货源货号" },
+        "source_shop": { "type": "string", "description": "来源店铺" }
+      },
+      "required": ["stream", "version", "producer", "consumer", "produced_at"]
+    },
+    "goods_info": {
+      "type": "object",
+      "properties": {
+        "goods_name": { "type": "string", "maxLength": 60, "description": "AI优化标题 ≤60字" },
+        "cat_id": { "type": ["integer", "null"], "description": "PDD类目ID" },
+        "market_price": { "type": "integer", "description": "划线价(分)", "minimum": 0 },
+        "goods_price": { "type": "integer", "description": "售价(分)", "minimum": 0 },
+        "goods_number": { "type": "integer", "description": "总库存", "minimum": 0 },
+        "goods_desc": { "type": "string", "description": "商品描述" },
+        "main_images": {
+          "type": "array",
+          "maxItems": 5,
+          "items": { "type": "string" },
+          "description": "主图路径列表 ≤5张"
+        },
+        "detail_images": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "详情图路径列表"
+        },
+        "sku_list": {
+          "type": "array",
+          "description": "SKU列表",
+          "items": {
+            "type": "object",
+            "properties": {
+              "spec": { "type": "string", "description": "规格 如'黑色,L'" },
+              "price": { "type": "integer", "description": "单价(分)" },
+              "quantity": { "type": "integer", "description": "库存量" }
+            },
+            "required": ["spec", "price", "quantity"]
+          }
+        },
+        "out_goods_id": { "type": "string", "description": "货源货号" }
+      },
+      "required": ["goods_name", "goods_price", "main_images", "sku_list"]
+    },
+    "pricing": {
+      "type": "object",
+      "properties": {
+        "tier": { "type": "string", "enum": ["traffic", "profit", "image"], "description": "定价策略" },
+        "cost_price": { "type": "number", "description": "拿货价(元)" },
+        "hard_cost": { "type": "number", "description": "硬成本(含运费)" },
+        "markup": { "type": "number", "description": "倍率" },
+        "return_rate": { "type": "number", "minimum": 0, "maximum": 1, "description": "退货率预估" },
+        "ad_rate": { "type": "number", "minimum": 0, "maximum": 1, "description": "推广费率" },
+        "commission": { "type": "number", "minimum": 0, "maximum": 1, "description": "平台扣点" },
+        "suggested_price": { "type": "number", "description": "建议售价(元)" },
+        "estimated_profit": { "type": "number", "description": "预计单件净利(元)" }
+      },
+      "required": ["tier", "cost_price", "suggested_price"]
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "shop_name": { "type": "string" },
+        "shop_url": { "type": "string", "format": "uri" },
+        "goods_no": { "type": "string" }
+      },
+      "required": ["shop_name", "goods_no"]
+    }
+  },
+  "required": ["meta", "goods_info", "pricing", "source"]
+}

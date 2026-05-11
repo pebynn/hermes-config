@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EC运营→选品调整",
+  "description": "ec-fulfillment 产出运营反馈数据，ec-sourcing 消费调整选品策略",
+  "version": "v1",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "元信息",
+      "properties": {
+        "stream": { "const": "ec-fulfillment-to-sourcing" },
+        "version": { "const": "v1" },
+        "producer": { "const": "ec-fulfillment" },
+        "consumer": { "const": "ec-sourcing" },
+        "produced_at": { "type": "string", "format": "date-time" },
+        "period_start": { "type": "string", "format": "date", "description": "统计周期开始" },
+        "period_end": { "type": "string", "format": "date", "description": "统计周期结束" }
+      },
+      "required": ["stream", "version", "producer", "consumer", "produced_at", "period_start", "period_end"]
+    },
+    "overview": {
+      "type": "object",
+      "properties": {
+        "total_orders": { "type": "integer", "minimum": 0 },
+        "total_returns": { "type": "integer", "minimum": 0 },
+        "return_rate": { "type": "number", "minimum": 0, "maximum": 1, "description": "退货率" },
+        "avg_dsr": { "type": "number", "minimum": 1, "maximum": 5, "description": "平均DSR评分" },
+        "total_revenue": { "type": "number", "description": "总营收(元)" }
+      },
+      "required": ["total_orders", "total_returns", "return_rate", "avg_dsr"]
+    },
+    "product_feedback": {
+      "type": "array",
+      "description": "单品反馈",
+      "items": {
+        "type": "object",
+        "properties": {
+          "goods_name": { "type": "string" },
+          "out_goods_id": { "type": "string", "description": "货源货号" },
+          "orders": { "type": "integer" },
+          "returns": { "type": "integer" },
+          "return_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "dsr": { "type": "number", "minimum": 1, "maximum": 5 },
+          "negative_reviews": { "type": "integer" },
+          "common_complaints": { "type": "array", "items": { "type": "string" }, "description": "常见差评关键词" },
+          "revenue": { "type": "number" },
+          "profit_estimate": { "type": "number" },
+          "suggestion": { "type": "string", "enum": ["keep", "adjust_price", "improve_quality", "discontinue", "expand_sku", "reduce_stock"], "description": "综合建议" }
+        },
+        "required": ["goods_name", "out_goods_id", "orders", "returns", "return_rate", "dsr", "suggestion"]
+      }
+    },
+    "sourcing_recommendations": {
+      "type": "array",
+      "description": "选品调整建议",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["discontinue", "increase", "find_alternative", "expand_category", "adjust_pricing"], "description": "建议类型" },
+          "reason": { "type": "string" },
+          "target_goods": { "type": "string", "description": "目标商品" },
+          "urgency": { "type": "string", "enum": ["immediate", "this_week", "this_month"] }
+        },
+        "required": ["type", "reason", "urgency"]
+      }
+    },
+    "category_trends": {
+      "type": "object",
+      "properties": {
+        "top_selling_categories": { "type": "array", "items": { "type": "string" } },
+        "high_return_categories": { "type": "array", "items": { "type": "string" } },
+        "trending_keywords": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "required": ["meta", "overview", "product_feedback"]
+}

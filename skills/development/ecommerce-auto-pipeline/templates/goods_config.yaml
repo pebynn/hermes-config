@@ -1,0 +1,105 @@
+# 拼多多商品上架配置模板
+# 用法：复制此文件，按需修改参数
+
+# 店铺凭证（从拼多多开放平台获取）
+pdd:
+  client_id: "your_client_id_here"
+  client_secret: "your_client_secret_here"
+  access_token: "your_access_token_here"
+
+# 商品类目（通过 pdd.goods.cat.get 获取）
+category:
+  cat_id: 12345
+  cat_name: "女装/中老年女装"
+
+# 价格策略
+pricing:
+  # 固定成本（每单）
+  fixed_cost:
+    shipping: 4           # 快递费（元）
+    packaging: 1          # 包装费（元）
+    insurance: 0.5        # 运费险（元）
+
+  # 浮动参数（中老年女装典型值）
+  params:
+    traffic:              # 引流款 🎣
+      markup_rate: 1.3        # 倍率
+      return_rate: 0.25       # 退货率25%
+      ad_rate: 0.15           # 推广费率
+      price_min: 25           # 最低售价
+      price_max: 49           # 最高售价
+    profit:               # 利润款 💰（主力）
+      markup_rate: 1.5        # 倍率
+      return_rate: 0.25       # 退货率25%
+      ad_rate: 0.10
+      price_min: 50
+      price_max: 99
+    image:                # 形象款 👑
+      markup_rate: 1.8        # 倍率
+      return_rate: 0.25       # 退货率25%
+      ad_rate: 0.08
+      price_min: 100
+      price_max: 199
+
+  # 平台费用
+  platform_commission: 0.006   # 拼多多支付通道费 0.6%
+
+  # 售价取整方式
+  rounding: "9.9"
+
+  # 定价上限（不得超过同款均价的比例）
+  max_above_market: 1.2
+
+# 标题生成规则
+title:
+  max_length: 30
+  template: "{core_word}{attribute}{scene}{promotion}"
+
+# 商品默认值
+goods_defaults:
+  stock: 200
+  delivery_type: 1       # 1=快递
+
+# 图片处理配置
+image:
+  min_width: 800
+  min_height: 800
+  max_main_images: 5
+  watermark_removal:
+    method: "inpaint"
+    roi: [null, null, 120, 70]
+  background:
+    color: [255, 255, 255]
+  text_overlay:
+    enabled: true
+    texts:
+      - text: "爆款推荐"
+        pos: [50, 50]
+        color: [255, 0, 0]
+        size: 48
+
+# 选品筛选规则
+filter:
+  max_price: 80
+  min_price: 15
+  include_keywords:
+    - "宽松"
+    - "显瘦"
+    - "大码"
+    - "妈妈"
+    - "中老年"
+    - "舒适"
+    - "棉"
+  exclude_keywords:
+    - "童装"
+    - "男装"
+    - "学生"
+    - "少女"
+  sort: "sale_desc"       # 按销量排序
+
+# pipeline 运行参数
+pipeline:
+  output_dir: "./pipeline_output"
+  hot_words_top: 20
+  candidates_max: 20
+  auto_upload: false      # false = 只生成候选列表，人工确认后再上传

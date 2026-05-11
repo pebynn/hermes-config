@@ -1,0 +1,161 @@
+# PR 审查标准定义
+# 用于 reviewer 和 code-domain 的协作基准
+
+categories:
+  security:
+    weight: 100
+    icon: "🔴"
+    blocks_merge: true
+    requires_reviewer_confirm: true
+    checks:
+      - id: sql-injection
+        description: "SQL注入 — 字符串拼接构造SQL"
+        patterns:
+          - "f\"SELECT.*FROM.*{"
+          - '".*SELECT.*FROM.*"+'
+          - "execute.*%s"
+        severity: critical
+
+      - id: hardcoded-secrets
+        description: "硬编码密钥/密码"
+        patterns:
+          - "password\\s*=\\s*['\"]"
+          - "api_key\\s*=\\s*['\"]"
+          - "secret\\s*=\\s*['\"]"
+          - "token\\s*=\\s*['\"]"
+        severity: critical
+
+      - id: xss
+        description: "XSS — 未转义的用户输入直接渲染"
+        patterns:
+          - "innerHTML.*\\+"
+          - "v-html.*\\+"
+          - "|safe.*\\{\\{"
+        severity: critical
+
+      - id: missing-auth
+        description: "缺少权限验证"
+        patterns:
+          - "@router\\.(get|post|put|delete)"
+          - "def .*\\(request\\):"
+        severity: high
+        exception: "public endpoints explicitly marked"
+
+      - id: csrf-missing
+        description: "缺少CSRF保护"
+        patterns:
+          - "@router\\.post"
+          - "<form.*method.*post"
+        severity: high
+
+  performance:
+    weight: 75
+    icon: "🟠"
+    blocks_merge: true  # only for critical/high
+    requires_reviewer_confirm: true  # only for critical
+    checks:
+      - id: n-plus-one-query
+        description: "N+1查询 — 循环内数据库查询"
+        patterns:
+          - "for .* in .*:\\s*\\n.*\\.query\\("
+          - "for .* in .*:\\s*\\n.*\\.filter\\("
+          - "for .* in .*:\\s*\\n.*SELECT"
+        severity: high
+
+      - id: memory-leak
+        description: "潜在内存泄漏 — 未关闭的资源"
+        patterns:
+          - "open\\([^)]+\\)(?!.*with)"
+          - "connect\\(.*\\)(?!.*with)"
+        severity: high
+
+      - id: inefficient-algorithm
+        description: "低效算法 — O(n²) 或更高"
+        patterns:
+          - "for .* in .*:\\s*\\n.*for .* in .*:"
+        severity: medium
+
+      - id: missing-index
+        description: "缺少数据库索引 — 频繁查询字段无索引"
+        severity: medium
+
+      - id: unbounded-query
+        description: "无限制查询 — 缺少分页或限制"
+        patterns:
+          - "\\.all\\(\\)"
+          - "\\.filter\\(.*\\)\\.all\\(\\)"
+          - "SELECT \\* FROM"
+        severity: medium
+
+  style:
+    weight: 50
+    icon: "🟡"
+    blocks_merge: false
+    requires_reviewer_confirm: false
+    checks:
+      - id: naming-violation
+        description: "命名不规范 — 不符合项目约定"
+        severity: low
+
+      - id: dry-violation
+        description: "DRY违反 — 重复代码块"
+        severity: low
+
+      - id: missing-docstring
+        description: "缺少文档字符串 — 公共函数/类无docstring"
+        severity: low
+
+      - id: complex-function
+        description: "函数复杂度过高 — 嵌套>3 或 行数>50"
+        severity: low
+
+  logic:
+    weight: 25
+    icon: "🔵"
+    blocks_merge: true  # only for critical/high
+    requires_reviewer_confirm: true  # only for high+
+    checks:
+      - id: null-pointer
+        description: "空值未处理 — 可能的 None/undefined 访问"
+        patterns:
+          - "\\.get\\(.*\\)\\."  # chained after dict.get without None check
+          - "\\[.*\\]\\."  # chained after index access
+        severity: medium
+
+      - id: race-condition
+        description: "竞态条件 — 并发访问共享状态无锁"
+        severity: high
+
+      - id: boundary-error
+        description: "边界条件 — off-by-one 或空集处理"
+        patterns:
+          - "range\\(0, len\\("
+          - "range\\(1, len\\("
+        severity: medium
+
+      - id: error-swallowing
+        description: "错误吞没 — bare except 或空 catch"
+        patterns:
+          - "except:"
+          - "except Exception:\\s*\\n\\s*pass"
+          - "catch \\(.*\\) \\{\\s*\\}"
+        severity: high
+
+# 阻断规则
+merge_rules:
+  auto_merge_allowed:
+    - "所有 critical/high 问题已修复"
+    - "reviewer 最新一轮审查通过"
+    - "CI 通过"
+    - "无 security 分类问题遗留"
+
+  blocks_merge:
+    - "任何 severity=critical 的未修复问题"
+    - "security/high 类别未修复问题"
+    - "reviewer 标记为 must-fix 的问题"
+
+# 迭代控制
+iteration:
+  max_rounds: 3
+  timeout_action: "block_for_human"
+  escalation_message: "3轮自动审查修复未通过，需人工介入。最新问题见任务评论。"

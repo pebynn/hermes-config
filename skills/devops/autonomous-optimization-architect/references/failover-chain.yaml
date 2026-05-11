@@ -1,0 +1,33 @@
+# Model failover chain for Hermes autonomous-optimization-architect
+# Used by: model-router-config.py, circuit-guard.py
+#
+# Primary -> Fallback -> Cost-Saving chain.
+# When the primary model fails or exceeds costs, Hermes falls through
+# to the next available tier.
+
+primary:
+  provider: deepseek
+  model: deepseek-v4-pro
+
+fallback:
+  provider: zhipu
+  model: glm-4.5-air
+
+cost_saving:
+  provider: deepseek
+  model: deepseek-chat
+
+# Per-domain model overrides — uncomment and edit as needed.
+per_domain:
+  # research:
+  #   primary: { provider: deepseek, model: deepseek-v4-pro }
+  #   fallback: { provider: deepseek, model: deepseek-v4-flash }
+  # code:
+  #   primary: { provider: deepseek, model: deepseek-v4-flash }
+  #   fallback: { provider: deepseek, model: deepseek-chat }
+  # ec:
+  #   primary: { provider: deepseek, model: deepseek-chat }
+  #   fallback: { provider: deepseek, model: deepseek-chat }
+  # general:
+  #   primary: { provider: deepseek, model: deepseek-v4-flash }
+  #   fallback: { provider: deepseek, model: deepseek-chat }

@@ -1,0 +1,11 @@
+{
+  "title": "PR Fix: {pr_title} [#{pr_number}] — Round {iteration}",
+  "assignee": "code-domain",
+  "body": "## 修复请求\n\n- PR: {pr_url}\n- 迭代轮次: {iteration}/3\n\n## 待修复问题\n\n{findings_from_reviewer}\n\n## 修复流程\n\n1. 按严重性从高到低逐项修复\n2. 每项修复后运行相关测试\n3. 修复完成后 git push 到 PR 分支\n4. 在 kanban_complete 中提供修复摘要\n\n## 输出格式\n\nkanban_complete metadata 必须包含:\n```json\n{\n  \"fixes_applied\": [\n    {\n      \"finding_id\": \"对应 finding 的标识\",\n      \"severity\": \"与原 finding 一致\",\n      \"category\": \"与原 finding 一致\",\n      \"action\": \"修复动作描述\",\n      \"files_changed\": [\"修改的文件列表\"],\n      \"test_added\": true\n    }\n  ],\n  \"tests_run\": 0,\n  \"tests_passed\": 0\n}\n```\n\n## 约束\n\n- 不改变 PR 的目标/范围，仅修复审查问题\n- security 类问题必须添加测试覆盖\n- 修复摘要必须关联到具体 finding",
+  "metadata": {
+    "pr_number": "{pr_number}",
+    "repo": "{repo}",
+    "iteration": "{iteration}",
+    "type": "pr-fix"
+  }
+}

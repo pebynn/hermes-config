@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "故障诊断→代码修复",
+  "description": "ops-domain 产出故障诊断与根因分析，code-domain 消费并实施修复",
+  "version": "v1",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "元信息",
+      "properties": {
+        "stream": { "const": "ops-to-code" },
+        "version": { "const": "v1" },
+        "producer": { "const": "ops-domain" },
+        "consumer": { "const": "code-domain" },
+        "produced_at": { "type": "string", "format": "date-time" },
+        "incident_id": { "type": "string", "description": "故障事件唯一标识" },
+        "severity": { "type": "string", "enum": ["P0", "P1", "P2", "P3"], "description": "故障等级" },
+        "status": { "type": "string", "enum": ["ongoing", "mitigated", "resolved"], "description": "当前处理状态" }
+      },
+      "required": ["stream", "version", "producer", "consumer", "produced_at", "incident_id", "severity"]
+    },
+    "symptoms": {
+      "type": "array",
+      "description": "故障症状",
+      "items": {
+        "type": "object",
+        "properties": {
+          "observed_at": { "type": "string", "format": "date-time" },
+          "indicator": { "type": "string", "description": "监控指标名称" },
+          "expected": { "type": "string", "description": "预期值" },
+          "actual": { "type": "string", "description": "实际值" },
+          "detail": { "type": "string", "description": "详细描述" }
+        },
+        "required": ["indicator", "actual", "detail"]
+      }
+    },
+    "root_cause": {
+      "type": "object",
+      "properties": {
+        "summary": { "type": "string", "description": "根因摘要" },
+        "category": { "type": "string", "enum": ["code_bug", "config_error", "dependency", "resource_exhaustion", "network", "security", "data_corruption", "external_api", "unknown"], "description": "根因类别" },
+        "affected_files": { "type": "array", "items": { "type": "string" }, "description": "相关文件路径" },
+        "log_excerpts": { "type": "array", "items": { "type": "string" }, "description": "关键日志片段" }
+      },
+      "required": ["summary", "category"]
+    },
+    "diagnosis_evidence": {
+      "type": "array",
+      "description": "诊断证据",
+      "items": {
+        "type": "object",
+        "properties": {
+          "check": { "type": "string", "description": "排查项" },
+          "result": { "type": "string", "description": "排查结果" }
+        },
+        "required": ["check", "result"]
+      }
+    },
+    "fix_recommendations": {
+      "type": "array",
+      "description": "修复建议",
+      "items": {
+        "type": "object",
+        "properties": {
+          "priority": { "type": "integer", "minimum": 1, "maximum": 5, "description": "优先级 1最高-5最低" },
+          "title": { "type": "string", "description": "修复项标题" },
+          "description": { "type": "string", "description": "详细修复方案" },
+          "code_snippet": { "type": "string", "description": "代码片段" },
+          "affected_files": { "type": "array", "items": { "type": "string" } },
+          "risk": { "type": "string", "enum": ["high", "medium", "low"], "description": "修复风险" },
+          "rollback_plan": { "type": "string", "description": "回滚方案" }
+        },
+        "required": ["priority", "title", "description", "risk"]
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "description": "故障时间线",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time": { "type": "string", "format": "date-time" },
+          "event": { "type": "string" }
+        },
+        "required": ["time", "event"]
+      }
+    }
+  },
+  "required": ["meta", "symptoms", "root_cause", "fix_recommendations"]
+}

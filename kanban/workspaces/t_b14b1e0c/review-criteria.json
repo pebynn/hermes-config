@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Review Criteria",
+  "description": "Review criteria with priority weights for the autonomous review-fix loop",
+  "priorities": {
+    "P0": {
+      "label": "Critical",
+      "category": "security",
+      "weight": 100,
+      "requires_human": true,
+      "auto_fix_allowed": false,
+      "examples": [
+        "SQL injection via string concatenation",
+        "XSS through unescaped user output",
+        "Hardcoded secrets/API keys/passwords",
+        "Insecure deserialization (pickle/yaml.load)",
+        "Path traversal in file operations",
+        "Command injection via shell=True or os.system",
+        "Missing authentication on sensitive endpoints",
+        "CSRF protection disabled"
+      ],
+      "detection_patterns": [
+        "execute\\(.*\\+.*\\)",
+        "format\\(.*request\\.",
+        "pickle\\.loads",
+        "yaml\\.load\\(.*Loader=None",
+        "subprocess\\.call\\(.*shell=True",
+        "os\\.system\\(",
+        "SECRET_KEY\\s*=\\s*['\"]",
+        "password\\s*=\\s*['\"]"
+      ]
+    },
+    "P1": {
+      "label": "High",
+      "category": "performance",
+      "weight": 75,
+      "requires_human": false,
+      "auto_fix_allowed": true,
+      "examples": [
+        "N+1 query pattern (query in loop)",
+        "Memory leak (unclosed resources)",
+        "Missing database index on join column",
+        "O(n²) where O(n) is achievable",
+        "Unbounded result set (missing LIMIT)",
+        "Synchronous I/O in async context",
+        "Large list comprehension instead of generator",
+        "Repeated expensive computations not cached"
+      ],
+      "detection_patterns": [
+        "for .* in .*:.*\\.filter\\(",
+        "for .* in .*:.*\\.query\\(",
+        "open\\(.*\\)(?!.*with)",
+        "\\.all\\(\\)(?!.*\\[)",
+        "time\\.sleep\\(.*await",
+        "requests\\.get\\(.*async"
+      ]
+    },
+    "P2": {
+      "label": "Medium",
+      "category": "style",
+      "weight": 50,
+      "requires_human": false,
+      "auto_fix_allowed": true,
+      "examples": [
+        "Function name not following snake_case",
+        "Missing docstring on public function/class",
+        "Function longer than 50 lines",
+        "Duplicate code blocks (DRY violation)",
+        "Magic numbers without named constants",
+        "Unused imports",
+        "Overly complex nested conditions (Cyclomatic > 10)",
+        "Missing type hints on public API"
+      ],
+      "detection_patterns": [
+        "^def [A-Z]",
+        "^class [a-z]",
+        "^import .*(?=# noqa)"
+      ]
+    },
+    "P3": {
+      "label": "Low",
+      "category": "logic",
+      "weight": 25,
+      "requires_human": false,
+      "auto_fix_allowed": true,
+      "examples": [
+        "Unhandled edge case (empty list, None, zero)",
+        "Bare except without specific exception type",
+        "Race condition in shared mutable state",
+        "Off-by-one error in range/loop",
+        "Missing error handling for external calls",
+        "Incorrect boolean logic (and vs or)",
+        "Resource cleanup not in finally block",
+        "Floating point equality comparison"
+      ],
+      "detection_patterns": [
+        "except:",
+        "if .* == 0\\.0",
+        "\\.pop\\(\\)(?!.*try)"
+      ]
+    }
+  },
+  "overrides": {
+    "financial_changes": {
+      "description": "Any changes to payment, billing, pricing, or money-related code",
+      "requires_human": true,
+      "auto_fix_allowed": false,
+      "file_patterns": [
+        "**/payment*",
+        "**/billing*",
+        "**/charge*",
+        "**/invoice*",
+        "**/pricing*",
+        "**/refund*",
+        "**/stripe*",
+        "**/transaction*"
+      ]
+    },
+    "max_findings_per_pr": 20,
+    "max_iterations": 3
+  }
+}

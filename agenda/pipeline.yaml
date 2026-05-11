@@ -1,0 +1,120 @@
+# 自主运维管道 — 任务依赖定义
+# ops-autopilot 读取此文件判断：哪些任务的前置条件已满足，可以启动
+
+pipelines:
+
+  # ── A股写作管线 ──
+  writing_daily:
+    description: 每日复盘全流程
+    schedule: 交易日 15:30-18:00
+    stages:
+      - task: collect_data
+        cron: 5896e6bcea04
+        time: "15:30"
+        produces: "~/writing-data/drafts/{date}-每日复盘.md 的数据源"
+        status: scheduled
+      - task: generate_review
+        cron: d075c207d860
+        time: "16:00"
+        depends_on: [collect_data]
+        produces: "~/writing-data/drafts/{date}-每日复盘.md"
+        status: scheduled
+      - task: publish_xueqiu
+        cron: 18619f5cdf16
+        time: "16:30"
+        depends_on: [generate_review]
+        status: scheduled
+      - task: notify_completion
+        cron: 704e9bfe5896
+        time: "18:00"
+        depends_on: [generate_review]
+        status: scheduled
+    rollover:
+      on_failure: "记录到 pending.md，次日检查依赖后重试"
+
+  writing_morning:
+    description: 盘前早报
+    schedule: 交易日 08:00
+    stages:
+      - task: morning_brief
+        cron: 8dc31c90bf0d
+        time: "08:00"
+        produces: "~/writing-data/drafts/{date}-盘前早报.md"
+        status: scheduled
+
+  # ── 量化管线 ──
+  quant_daily:
+    description: K线+信号扫描
+    schedule: 交易日 16:00-21:00
+    stages:
+      - task: kline_update
+        cron: afff56398abe
+        time: "16:00"
+        produces: "MySQL stock_kline.daily_kline 当日数据"
+        status: scheduled
+      - task: margin_data
+        cron: 18edaa02cd7e
+        time: "16:15"
+        depends_on: [kline_update]
+        status: scheduled
+      - task: signal_scan
+        cron: b60f3c86dd1b
+        time: "21:00"
+        depends_on: [kline_update, margin_data]
+        produces: "QQ Bot 信号推送"
+        status: scheduled
+
+  # ── 系统维护 ──
+  system_maintenance:
+    description: 知识图谱+教训+摘要
+    schedule: 每日
+    stages:
+      - task: agenda_builder
+        cron: e512e447fb29
+        time: "08:00"
+        produces: "~/.hermes/agenda/daily.md"
+        status: scheduled
+      - task: error_learner
+        cron: 575103045eb1
+        time: "22:00"
+        status: scheduled
+      - task: daily_digest
+        cron: d097864fb3ad
+        time: "21:00"
+        status: scheduled
+      - task: gbrain_sync
+        cron: 47600ff91a8f
+        time: "每6小时"
+        status: scheduled
+
+  # ── 周度任务 ──
+  weekly:
+    description: 周总结+量化周报+图谱更新
+    stages:
+      - task: weekly_summary
+        cron: 3858ff88add6
+        schedule: "周五 17:00"
+        status: scheduled
+      - task: quant_weekly
+        cron: bc02d5952723
+        schedule: "周日 15:30"
+        status: scheduled
+      - task: graphify_weekly
+        cron: e1917ae814df
+        schedule: "周一 03:00"
+        status: scheduled
+      - task: lesson_promoter
+        cron: 60c82974423f
+        schedule: "周一 03:00"
+        status: scheduled
+
+# ── 自动修复规则 ──
+auto_fix_rules:
+  - pattern: "last_status=error 且已诊断已知原因"
+    action: "cronjob action=run job_id=<id> 重试一次"
+  - pattern: "cron 从未运行(新创建)"
+    action: "检查 schedule 是否已到，若已到则 cronjob action=run"
+  - pattern: "磁盘 >85% 或会话 >500 超期"
+    action: "清理: find sessions -mtime +7 -delete; docker prune"
+  - pattern: "API 熔断 (circuit broken)"
+    action: "切换到备用 provider，通知用户"

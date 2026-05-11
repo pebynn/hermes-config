@@ -1,0 +1,22 @@
+# Cost thresholds for Hermes autonomous-optimization-architect
+# Used by: cost-tracker.py, circuit-guard.py
+# Edit these values to match your budget and risk tolerance.
+
+# Cost thresholds — calibrated against real DeepSeek billing (2026-05-10)
+# Real: 15 days ¥600 ≈ $84, avg $5.6/day, peaks $11-$18/day
+per_session_max: 2.00
+per_day_max: 8.00
+
+per_domain_daily:
+  research: 5.00
+  code: 8.00
+  ec: 1.00
+  finance: 3.00
+
+circuit_breaker:
+  consecutive_failures: 5
+  window_minutes: 30
+
+alert_channels:
+  - terminal
+  - cron-report

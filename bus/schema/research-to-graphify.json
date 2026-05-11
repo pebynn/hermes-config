@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "调研结果→知识图谱",
+  "description": "research-domain 产出结构化知识条目，graphify 消费写入知识图谱",
+  "version": "v1",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "元信息",
+      "properties": {
+        "stream": { "const": "research-to-graphify" },
+        "version": { "const": "v1" },
+        "producer": { "const": "research-domain" },
+        "consumer": { "const": "graphify" },
+        "produced_at": { "type": "string", "format": "date-time" },
+        "research_topic": { "type": "string", "description": "调研主题" },
+        "research_date": { "type": "string", "format": "date" }
+      },
+      "required": ["stream", "version", "producer", "consumer", "produced_at", "research_topic"]
+    },
+    "entries": {
+      "type": "array",
+      "description": "知识条目列表",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "条目唯一标识" },
+          "type": { "type": "string", "enum": ["concept", "fact", "insight", "relation", "source", "conclusion"], "description": "条目类型" },
+          "title": { "type": "string", "description": "条目标题" },
+          "summary": { "type": "string", "description": "条目摘要" },
+          "detail": { "type": "string", "description": "详细内容" },
+          "tags": { "type": "array", "items": { "type": "string" }, "description": "标签列表" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "置信度" },
+          "sources": {
+            "type": "array",
+            "description": "信息来源",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": { "type": "string", "format": "uri" },
+                "title": { "type": "string" },
+                "reliability": { "type": "string", "enum": ["high", "medium", "low"] }
+              },
+              "required": ["url", "title"]
+            }
+          },
+          "relations": {
+            "type": "array",
+            "description": "与其他条目的关系",
+            "items": {
+              "type": "object",
+              "properties": {
+                "target_id": { "type": "string", "description": "目标条目ID" },
+                "relation_type": { "type": "string", "enum": ["supports", "contradicts", "extends", "depends_on", "references", "is_a"] },
+                "description": { "type": "string" }
+              },
+              "required": ["target_id", "relation_type"]
+            }
+          }
+        },
+        "required": ["id", "type", "title", "summary", "confidence"]
+      }
+    }
+  },
+  "required": ["meta", "entries"]
+}

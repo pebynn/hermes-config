@@ -1,0 +1,6 @@
+model:
+  provider: deepseek
+  default: deepseek-v4-flash
+delegation:
+  max_spawn_depth: 2
+  orchestrator_enabled: true

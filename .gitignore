@@ -1,0 +1,82 @@
+# 大文件/缓存
+audio_cache/
+data/
+sessions/
+graphify-out/
+cache/
+kanban/logs/
+logs/
+image_cache/
+images/
+tmp/
+state-snapshots/
+checkpoints/
+background_jobs/
+memories/
+notify_queue/
+pastes/
+sandboxes/
+cron/output/
+research-findings/
+hooks/
+
+# 环境/密钥
+.env
+credentials/
+weixin/
+browser-data/
+pairing/
+
+# 运行时
+hermes-agent/
+venv/
+node/
+mcp-servers/__pycache__/
+scripts/__pycache__/
+migration/
+
+# 密钥/认证
+.env.bak
+auth.json
+auth.lock
+
+# 配置备份
+config.yaml.bak.*
+SOUL.md.bak.*
+
+# 运行状态/锁
+gateway.pid
+gateway.lock
+gateway_state.json
+cron/.tick.lock
+cron/jobs.json
+*.lock
+
+# 数据库
+hermes.db
+kanban.db
+*.db-journal
+
+# 内部状态
+.graphify_*.json
+.skill_learnings_state.json
+.skills_prompt_snapshot.json
+.update_check
+.hermes_history
+interrupt_debug.log
+channel_directory.json
+agenda/.pipeline_notify
+agenda/state.json
+agenda/task_tracker.json
+agenda/pipelines.json
+
+# Kanban同步状态
+kanban/gh-*.json
+kanban/github_sync_state.json
+
+# 其他
+*.pyc
+__pycache__/
+.DS_Store
+agenda/archive/
+mcp-tasks/

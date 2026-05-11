@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "审查反馈→写作改进",
+  "description": "reviewer 产出细粒度修改建议，writer 消费改进文章",
+  "version": "v1",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "元信息",
+      "properties": {
+        "stream": { "const": "reviewer-to-writer" },
+        "version": { "const": "v1" },
+        "producer": { "const": "reviewer" },
+        "consumer": { "const": "writer" },
+        "produced_at": { "type": "string", "format": "date-time" },
+        "article_title": { "type": "string", "description": "被审查文章标题" },
+        "article_path": { "type": "string", "description": "被审查文章路径" }
+      },
+      "required": ["stream", "version", "producer", "consumer", "produced_at", "article_title"]
+    },
+    "overall_assessment": {
+      "type": "object",
+      "properties": {
+        "score": { "type": "integer", "minimum": 1, "maximum": 10, "description": "总体评分 1-10" },
+        "verdict": { "type": "string", "enum": ["approve", "approve_with_changes", "rework", "reject"], "description": "审核结论" },
+        "summary": { "type": "string", "description": "总体评价摘要" }
+      },
+      "required": ["score", "verdict", "summary"]
+    },
+    "issues": {
+      "type": "array",
+      "description": "问题列表",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "问题唯一标识" },
+          "category": { "type": "string", "enum": ["accuracy", "clarity", "style", "structure", "factual", "compliance", "formatting", "other"], "description": "问题类别" },
+          "severity": { "type": "string", "enum": ["critical", "major", "minor", "suggestion"], "description": "严重程度" },
+          "location": { "type": "string", "description": "问题所在位置（段落/行号）" },
+          "original_text": { "type": "string", "description": "原文片段" },
+          "description": { "type": "string", "description": "问题描述" },
+          "suggestion": { "type": "string", "description": "修改建议" },
+          "suggested_replacement": { "type": "string", "description": "建议替换文本" }
+        },
+        "required": ["id", "category", "severity", "description", "suggestion"]
+      }
+    },
+    "positive_feedback": {
+      "type": "array",
+      "description": "正面反馈",
+      "items": {
+        "type": "object",
+        "properties": {
+          "location": { "type": "string" },
+          "what_works": { "type": "string" }
+        },
+        "required": ["location", "what_works"]
+      }
+    },
+    "action_items": {
+      "type": "array",
+      "description": "修改行动项",
+      "items": {
+        "type": "object",
+        "properties": {
+          "priority": { "type": "string", "enum": ["must_fix", "should_fix", "nice_to_have"] },
+          "action": { "type": "string" },
+          "issue_ids": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["priority", "action"]
+      }
+    }
+  },
+  "required": ["meta", "overall_assessment", "issues", "action_items"]
+}

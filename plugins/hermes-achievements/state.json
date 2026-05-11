@@ -1,0 +1,269 @@
+{
+  "unlocks": {
+    "actually_read_the_logs": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "autonomous_avalanche": {
+      "evidence": null,
+      "first_tier": "Diamond",
+      "unlocked_at": 1778445375
+    },
+    "background_process_enjoyer": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "cache_hit_appreciator": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "citation_goblin": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "claude_confidant": {
+      "evidence": null,
+      "first_tier": "Olympian",
+      "unlocked_at": 1778445375
+    },
+    "codex_conjurer": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "config_surgeon": {
+      "evidence": null,
+      "first_tier": "Diamond",
+      "unlocked_at": 1778445375
+    },
+    "context_dragon": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "dependency_hell_tourist": {
+      "evidence": null,
+      "first_tier": null,
+      "unlocked_at": 1778445375
+    },
+    "file_archaeologist": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "five_model_flight": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "forgot_the_env_var": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "gateway_dweller": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "gemini_cartographer": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "let_him_cook": {
+      "evidence": {
+        "session_id": "20260428_053455_df0771",
+        "title": "\u914d\u7f6e\u6587\u4ef6\u4f18\u5316\u68c0\u67e5",
+        "value": 552
+      },
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "marathon_operator": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "memory_keeper": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "memory_palace": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "model_hopper": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "model_sommelier": {
+      "evidence": null,
+      "first_tier": "Olympian",
+      "unlocked_at": 1778445375
+    },
+    "multi_model_mage": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "night_shift_operator": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "one_character_fix": {
+      "evidence": null,
+      "first_tier": null,
+      "unlocked_at": 1778445375
+    },
+    "one_more_small_change": {
+      "evidence": {
+        "session_id": "20260505_035602_be65d9",
+        "title": "Writing Domain \u5168\u9762\u68c0\u67e5",
+        "value": 174
+      },
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "openrouter_enjoyer": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "patch_wizard": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "permission_denied_any_percent": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "plugin_goblin": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "provider_polyglot": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "rabbit_hole_certified": {
+      "evidence": null,
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "rebase_acrobat": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "red_text_connoisseur": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "rollback_wizard": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "screenshot_hunter": {
+      "evidence": null,
+      "first_tier": "Olympian",
+      "unlocked_at": 1778445375
+    },
+    "ship_first_ask_later": {
+      "evidence": null,
+      "first_tier": null,
+      "unlocked_at": 1778445375
+    },
+    "skill_issue_skill_created": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "skillsmith": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "stack_trace_sommelier": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "subagent_commander": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "supposed_to_be_quick": {
+      "evidence": {
+        "session_id": "20260428_053455_df0771",
+        "title": "\u914d\u7f6e\u6587\u4ef6\u4f18\u5316\u68c0\u67e5",
+        "value": 1180
+      },
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "terminal_goblin": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "test_suite_tamer": {
+      "evidence": null,
+      "first_tier": "Olympian",
+      "unlocked_at": 1778445375
+    },
+    "the_fix_was_restarting": {
+      "evidence": null,
+      "first_tier": null,
+      "unlocked_at": 1778445375
+    },
+    "toolchain_maxxer": {
+      "evidence": {
+        "session_id": "20260505_235231_4f9b95",
+        "title": "\u68c0\u67e5\u6240\u6709 MCP server \u72b6\u6001\uff1a\u5217\u51fa\u6240\u6709 MCP server\uff0c\u9010\u4e00\u68c0\u67e5\u8fde\u901a\u6027",
+        "value": 22
+      },
+      "first_tier": "Copper",
+      "unlocked_at": 1778445375
+    },
+    "toolset_cartographer": {
+      "evidence": null,
+      "first_tier": "Olympian",
+      "unlocked_at": 1778445375
+    },
+    "vibe_architect": {
+      "evidence": {
+        "session_id": "20260428_024737_57d10610",
+        "title": "\u67e5\u770b\u5df2\u5b58\u50a8\u8bb0\u5fc6",
+        "value": 834
+      },
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    },
+    "weekend_warrior": {
+      "evidence": null,
+      "first_tier": "Gold",
+      "unlocked_at": 1778445375
+    },
+    "yaml_colon_incident": {
+      "evidence": null,
+      "first_tier": "Silver",
+      "unlocked_at": 1778445375
+    }
+  }
+}

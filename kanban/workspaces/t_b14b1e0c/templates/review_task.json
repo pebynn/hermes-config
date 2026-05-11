@@ -1,0 +1,12 @@
+{
+  "title": "PR Review: {pr_title} [#{pr_number}]",
+  "assignee": "reviewer",
+  "body": "## 审查请求\n\n- PR: {pr_url}\n- 分支: {branch}\n- 触发标签: auto-review\n- 迭代轮次: {iteration}/3\n\n## 审查标准\n\n按优先级审查：\n1. 🔴 安全 (security) — SQL注入、XSS、硬编码密钥、权限缺失\n2. 🟠 性能 (performance) — N+1查询、内存泄漏、算法复杂度\n3. 🟡 风格 (style) — 命名规范、代码结构、DRY违反\n4. 🔵 逻辑 (logic) — 边界条件、空值处理、竞态条件\n\n## 输出格式\n\n每个发现必须包含:\n```json\n{\n  \"severity\": \"critical | high | medium | low\",\n  \"category\": \"security | performance | style | logic\",\n  \"file\": \"文件路径\",\n  \"line\": 行号,\n  \"issue\": \"问题描述\",\n  \"suggestion\": \"修复建议\"\n}\n```\n\n## 约束\n\n- 涉及资金/安全的改动必须由 reviewer 最终确认\n- 仅审查标记为 auto-review 的 PR\n- 不通过时在 metadata.findings 中列出所有问题",
+  "metadata": {
+    "pr_number": "{pr_number}",
+    "pr_url": "{pr_url}",
+    "repo": "{repo}",
+    "iteration": "{iteration}",
+    "type": "pr-review"
+  }
+}
