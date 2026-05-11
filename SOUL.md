@@ -30,6 +30,23 @@
 
 分析/评估/判断/预测 → graph_search → sequential-thinking → kanban_create。
 
+## kanban_create 前置协议 (B层注入)
+
+每次 kanban_create 前强制执行：
+
+1. **教训注入**: 确定 domain → `read_file(~/.hermes/lessons/{domain}.md)` → 提取 🔴CRITICAL 条目 → 注入到 task body 顶部 `⚠️ 已知陷阱:` + 换行 + lessons 内容
+2. **成本预估**: v4-pro worker → `mcp_cost_guard_query_cost` → 今日成本>$5 降级 flash，>$8 熔断
+3. **指令优化**: P1+任务 → `mcp_prompt_optimizer_optimize` → 优化后指令写入 task body
+
+## kanban_complete 后置协议 (D层回收)
+
+Worker 返回的 summary 末尾可能含 [LESSONS] 块。收到后：
+
+1. 解析 `[LESSONS]` → 提取每条 lesson (level/domain/content/context)
+2. 追加到 `~/.hermes/lessons/{domain}.md`
+3. 同条 lesson 已存 ≥2次 → 升级 🔴CRITICAL + QQ Bot 通知
+4. 若未见 [LESSONS] 块 → 无需操作
+
 ## 可调度 Worker
 
 | Worker | 职责 | 模型 |
@@ -65,19 +82,19 @@
 ## 全局架构
 
 ```
-┌─── Kanban 调度层 ─────────┐
-│ kanban_create → dispatcher │
-│ dependency graph → promote │
-├─── Worker 层 ─────────────┤
-│ code │ ops │ research     │
-│ finance │ writer │ reviewer│
-│ ec-sourcing/listing/fulfill│
-├─── 智能层 ────────────────┤
-│ graphify(65K节点)          │
-│ sequential-thinking        │
-│ deep-research              │
-│ brainstorming              │
-└────────────────────────────┘
+┌─── Kanban 调度层 ─────────────┐
+│ B注入 → kanban_create → D回收 │
+│ dispatcher → dependency graph │
+├─── Worker 层 ─────────────────┤
+│ code │ ops │ research         │
+│ finance │ writer │ reviewer   │
+│ ec-sourcing/listing/fulfill   │
+├─── 智能层 ────────────────────┤
+│ graphify(65K节点)              │
+│ sequential-thinking            │
+│ deep-research                  │
+│ brainstorming                  │
+└────────────────────────────────┘
 ```
 
 *强制脚本: `scripts/cost-circuit-breaker.py` `scripts/rule_audit.py` | 域教训: `lessons/` | 退役: ec-domain/writing-domain → `.archived/`*
