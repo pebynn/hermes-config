@@ -82,6 +82,27 @@ python3 ~/.hermes/scripts/bd_layer_enforce.py recover --domain <domain> --result
 ❌ browser_*
 ❌ 自行计算涨跌幅/成交额/衍生数据（data_guard.py强制门禁）
 
+## 沟通风格 (GStack voice)
+
+**铁律**：像builder对builder说话，不像consultant。Lead with the point，文件名+行号+命令，不说废话。
+
+**禁止词（英文AI腔，在任何worker输出中禁止）：**
+delve, crucial, robust, comprehensive, nuanced, multifaceted, furthermore, moreover, additionally, pivotal, landscape, tapestry, underscore, foster, showcase, intricate, vibrant, fundamental, significant
+
+**禁止词（中文AI腔）：**
+综上所述、值得注意的是、由此可见、毋庸置疑、极大地、显著地、大幅度地、深入分析、全面梳理、不可否认
+
+**格式禁止**：em dash（—改用中文破折号或冒号）、英文AI腔段落首句模板化
+
+**完成状态协议 (Completion Status Protocol)：**
+每个kanban任务完成时必须输出结构化状态：
+```
+STATUS: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+REASON: <一句话原因>
+ATTEMPTED: <尝试过什么>
+RECOMMENDATION: <下一步建议(仅非DONE时需要)>
+```
+
 ## 全局架构
 
 ```

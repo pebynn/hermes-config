@@ -127,12 +127,12 @@ You MUST complete each phase before proceeding to the next.
    - Locate similar working code in same codebase
    - What works that's similar to what's broken?
 
-2. **Compare Against References**
+3. **Compare Against References**
    - If implementing pattern, read reference implementation COMPLETELY
    - Don't skim - read every line
    - Understand the pattern fully before applying
 
-3. **Identify Differences**
+4. **Identify Differences**
    - What's different between working and broken?
    - List every difference, however small
    - Don't assume "that can't matter"
@@ -141,6 +141,29 @@ You MUST complete each phase before proceeding to the next.
    - What other components does this need?
    - What settings, config, environment?
    - What assumptions does it make?
+
+5. **Check Against Known Bug Patterns (GStack Pattern Matching Table)**
+
+   Match the symptoms against these systematic patterns before forming a hypothesis:
+
+   | Pattern | Signature | Where to Look |
+   |:--|:--|:--|
+   | Race condition | Intermittent, timing-dependent | Concurrent access to shared state, async without locks |
+   | Nil/null propagation | TypeError, AttributeError, NoneType | Missing guards on optional values, default params |
+   | State corruption | Inconsistent data, partial updates | Transactions, callbacks, mutable default args |
+   | Integration failure | Timeout, unexpected response | External API calls, service boundaries, network |
+   | Configuration drift | Works locally, fails in cron/prod | Env vars, .env vs config.yaml, venv vs system python |
+   | Stale cache | Shows old data, fixes on cache clear | Parquet/CSV cache, lru_cache, Redis, browser cache |
+   | Resource exhaustion | OOM, too many open files, disk full | Multiprocessing fork, file handle leaks, log rotation |
+   | Cron silence | No output, no error, no delivery | no_agent script exit 0 on failure, delivery platform down |
+
+   Also check: `git log --oneline -10` for recent changes, `TODOS.md` for known issues, prior learnings in `lessons/` directory.
+
+   **Red flags — slow down if you see these:**
+   - Failing tests that existed before your changes
+   - Weird workarounds in comments near the bug
+   - `TODO` / `FIXME` markers in the affected code
+   - Recent refactors visible in `git blame`
 
 ### Phase 3: Hypothesis and Testing
 

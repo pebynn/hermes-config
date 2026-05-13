@@ -41,3 +41,25 @@ Developed during 2026-05-04 comprehensive system audit. Used when user asks for 
 | 记忆系统 | 70 |
 
 Top 3 硬伤: self-evolution空转, Memory 94%, research-domain orchestrator误开.
+
+## Trend Tracking (GStack health)
+
+每次评分后追加到 `~/.hermes/health/history.jsonl`（每行一个JSON对象）：
+
+```json
+{"date": "2026-05-15", "composite": 70.3, "dimensions": {"架构合规性": 75, ...}}
+```
+
+**趋势对比规则：**
+1. 读取最近2条历史记录
+2. 对比综合分：±5以内=稳定，+5以上=改善，-5以下=退化
+3. 逐维度对比：单维度下降>15分 → 独立告警
+4. **连续2次退化** → QQ Bot告警（hermes-notify）
+5. 仅保留最近20条（自动剪枝）
+
+**输出增强**（在评分矩阵后追加）：
+```
+趋势: ↑改善 / →稳定 / ↓退化
+较上次: +X.X / -X.X
+退化维度: <维度名>(-X分) [仅当有退化时显示]
+```
