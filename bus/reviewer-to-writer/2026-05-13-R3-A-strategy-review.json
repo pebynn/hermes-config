@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "stream": "reviewer-to-writer",
+    "version": "v1",
+    "producer": "reviewer",
+    "consumer": "writer",
+    "produced_at": "2026-05-13T23:43:00+08:00",
+    "article_title": "R3-A策略审查结果",
+    "article_path": "/home/pebynn/.hermes/kanban/boards/evo-a/workspaces/t_e01f6c82/R3-A_review_verdict.json"
+  },
+  "overall_assessment": {
+    "score": 4,
+    "verdict": "rework",
+    "summary": "R3-A全周期未达标(年化119.64%<150%, 胜率35.7%<45%)。OOS验证使用未修复的R2代码(4项look-ahead bias), 343-466%年化数字完全不可信。需OOS重跑后方可继续优化。全周期2025年+623%单年驱动全部收益, 剔除后4年年化仅~39%, 策略极度尾部依赖。"
+  },
+  "issues": [
+    {
+      "id": "R3A-001",
+      "category": "accuracy",
+      "severity": "critical",
+      "location": "OOS验证套件 (t_19e658d8)",
+      "description": "OOS Period A/B使用未修复R2代码执行, 含4项look-ahead bias (momentum_entry/trailing_exit/stop_loss/T+1)。343-466%年化/<1%MDD均为偏差产物。OOS报告自身已声明'验证不通过'。",
+      "suggestion": "OOS必须用R3修复后strategy_v2.py重跑, 产出可信oos_period_a_fixed.json和oos_period_b_fixed.json"
+    },
+    {
+      "id": "R3A-002",
+      "category": "factual",
+      "severity": "major",
+      "location": "全周期回测 (t_22b1e0d7)",
+      "description": "年化119.64%未达150%目标(差30.36pp), 胜率35.7%未达45%目标(差9.3pp)。两项核心指标均未达标。",
+      "suggestion": "参数优化方向: 收紧止损(10%→5-7%)、调整top_n、优化动量阈值。但需先等OOS重跑确认天花板。"
+    },
+    {
+      "id": "R3A-003",
+      "category": "factual",
+      "severity": "major",
+      "location": "尾部集中风险",
+      "description": "2025年单年+623%占全周期收益绝大部分。剔除后4年年化仅~39%。策略并非稳定超额, 而是赌中了2025年结构性机会。2022年-32%暴露beta风险。",
+      "suggestion": "加入单股上限15%、最大回撤硬止损-30%、强制再平衡机制"
+    },
+    {
+      "id": "R3A-004",
+      "category": "factual",
+      "severity": "major",
+      "location": "最大回撤",
+      "description": "MDD -54.6%比修复前(-22.2%)恶化2.5x, 不可接受。跌停退出173笔(8%)平均亏损-14.8%真实反映了流动性风险。",
+      "suggestion": "考虑portfolio层面使用, 不单独账户。需搭配仓位管理系统。"
+    }
+  ],
+  "positive_feedback": [
+    {
+      "location": "R3修复质量",
+      "what_works": "4项look-ahead bias修复方向正确且已落地。退出来源分布(px_trail 64.7%/drop 18%/stop 8.2%/limit_down 8%)真实反映了策略机制。修复后的MDD和胜率比修复前更可信。"
+    },
+    {
+      "location": "参数稳定性",
+      "what_works": "R2参数(stop_loss=0.10, trailing_stop=0.06, top_n=10)在R3修复后仍能产生正收益, 参数本身未过拟合。"
+    }
+  ],
+  "action_items": [
+    {
+      "priority": "must_fix",
+      "action": "OOS用R3修复后代码重跑, 产出可信OOS结果。此为所有后续工作的前置条件。",
+      "issue_ids": ["R3A-001"]
+    },
+    {
+      "priority": "should_fix",
+      "action": "基于可信OOS结果判断策略天花板。若天花板≥80%则参数优化冲刺150%; 若30-60%则降标或替换策略类。",
+      "issue_ids": ["R3A-002"]
+    },
+    {
+      "priority": "should_fix",
+      "action": "加入仓位分散机制(单股上限/强制再平衡)控制尾部集中和回撤",
+      "issue_ids": ["R3A-003", "R3A-004"]
+    }
+  ]
+}

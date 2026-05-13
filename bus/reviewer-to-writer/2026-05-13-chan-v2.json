@@ -1,0 +1,73 @@
+{
+  "audit_id": "T3-C-2026-05-13",
+  "verdict": "NEEDS_IMPROVEMENT",
+  "article_ref": "T2-C-缠论策略v2",
+  "findings": [
+    {
+      "severity": "critical",
+      "category": "future_function",
+      "file": "strategy_chan_v2.py",
+      "line": 403,
+      "issue": "2-day lookahead window: end_dt = rd_dt + timedelta(days=2)",
+      "fix": "Change to end_dt = rd_dt"
+    },
+    {
+      "severity": "critical",
+      "category": "data_quality",
+      "file": "strategy_chan_v2.py",
+      "line": 252,
+      "issue": "Beijing Stock Exchange (920xxx) stocks not filtered in MySQL path; 11/88 trades invalid",
+      "fix": "Filter code_klines against stock_list codes or add 920xxx exclusion"
+    },
+    {
+      "severity": "high",
+      "category": "oos_stability",
+      "issue": "Only 4 months backtest; no independent OOS window. Cannot verify OOS robustness (R23 had 558%→-42% collapse)",
+      "fix": "Extend backtest to 12+ months with 6-month OOS holdout"
+    },
+    {
+      "severity": "medium",
+      "category": "data_quality",
+      "issue": "Dual-source verification failed: Sina parquet only 100 stocks (vs MySQL 5308), produced 0 trades",
+      "fix": "Regenerate Sina parquet cache for full stock universe"
+    },
+    {
+      "severity": "medium",
+      "category": "stop_loss",
+      "issue": "Actual stop loss avg -9.96% vs declared -8%; 13/31 stops worse than -10% due to gap risk",
+      "comment": "Expected behavior in Chinese A-share market; should be disclosed in article"
+    },
+    {
+      "severity": "low",
+      "category": "documentation",
+      "file": "strategy_chan_v2.py",
+      "line": 438,
+      "issue": "Comment still mentions RSI filter which was removed in R23",
+      "fix": "Update comment to reflect 3-condition filter"
+    }
+  ],
+  "metrics": {
+    "mysql": {
+      "trades": 88,
+      "win_rate": 44.3,
+      "profit_factor": 1.35,
+      "total_return_pct": 19.09,
+      "annualized_pct": 70.97,
+      "sharpe": 0.74,
+      "max_drawdown_pct": -10.55,
+      "monthly": {
+        "2026-01": 4.42,
+        "2026-02": -5.11,
+        "2026-03": 1.66,
+        "2026-04": 1.54
+      }
+    },
+    "sina": {
+      "trades": 0,
+      "note": "Dataset too small (100 stocks vs 5308); cannot replicate"
+    }
+  },
+  "oos_status": "NO_INDEPENDENT_OOS - entire backtest is in-sample",
+  "blocking_issues": 2,
+  "backtest_csv": "/home/pebynn/.hermes/kanban/boards/strat-c/workspaces/t_6cb2e518/backtest_mysql.csv"
+}

@@ -1,0 +1,557 @@
+{
+  "date": "2026-05-13",
+  "pipeline": "P3-信号扫描排名",
+  "total_screened": 1078,
+  "total_industries": 104,
+  "weights": {
+    "L1": 0.25,
+    "L2": 0.3,
+    "FF": 0.2,
+    "L3": 0.25
+  },
+  "normalization": "percentile_rank",
+  "neutralization": "industry_mean_subtract (>=3 stocks)",
+  "L2_quality_gate": "buy2_score >= 75",
+  "top20": [
+    {
+      "rank": 1,
+      "code": "600737",
+      "name": "中粮糖业",
+      "industry": "食品",
+      "neutralized_score": 0.4947,
+      "components": {
+        "L1_pct": 74.1,
+        "L2_pct": 96.7,
+        "FF_pct": 91.5,
+        "L3_pct": 97.8
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 17.34,
+        "l1_total": 0.495511013191318,
+        "l1_ep": 0.006136087484811665,
+        "l1_bp": 0.33048957027336445,
+        "l1_mom_12m": 0.835005574136009,
+        "l1_reversal_1m": 0.14067914067914078,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 87.3,
+        "l3_mfi": 39.22,
+        "l3_kama": 1.2256
+      }
+    },
+    {
+      "rank": 2,
+      "code": "603269",
+      "name": "海鸥股份",
+      "industry": "机械基件",
+      "neutralized_score": 0.4115,
+      "components": {
+        "L1_pct": 95.1,
+        "L2_pct": 96.7,
+        "FF_pct": 91.5,
+        "L3_pct": 97.8
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 13.37,
+        "l1_total": 0.5937458303299821,
+        "l1_ep": 0.0033018867924528308,
+        "l1_bp": 0.15212359717160334,
+        "l1_mom_12m": 1.8005284015852046,
+        "l1_reversal_1m": 0.46916146916146917,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 87.3,
+        "l3_mfi": 40.9,
+        "l3_kama": 22.1238
+      }
+    },
+    {
+      "rank": 3,
+      "code": "000066",
+      "name": "中国长城",
+      "industry": "IT设备",
+      "neutralized_score": 0.4026,
+      "components": {
+        "L1_pct": 86.6,
+        "L2_pct": 96.7,
+        "FF_pct": 91.5,
+        "L3_pct": 77.2
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 14.91,
+        "l1_total": 0.5402963491790935,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 0.7360441075120607,
+        "l1_reversal_1m": 0.6726427622841966,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 82.4,
+        "l3_mfi": 46.16,
+        "l3_kama": 14.143
+      }
+    },
+    {
+      "rank": 4,
+      "code": "600783",
+      "name": "鲁信创投",
+      "industry": "专用机械",
+      "neutralized_score": 0.3695,
+      "components": {
+        "L1_pct": 97.4,
+        "L2_pct": 96.7,
+        "FF_pct": 91.5,
+        "L3_pct": 76.6
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 20.31,
+        "l1_total": 0.6139422960251162,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 1.0017050298380221,
+        "l1_reversal_1m": 0.1420233463035021,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 82.3,
+        "l3_mfi": 36.94,
+        "l3_kama": 2.9345
+      }
+    },
+    {
+      "rank": 5,
+      "code": "002951",
+      "name": "金时科技",
+      "industry": "广告包装",
+      "neutralized_score": 0.3654,
+      "components": {
+        "L1_pct": 75.4,
+        "L2_pct": 96.7,
+        "FF_pct": 91.5,
+        "L3_pct": 82.0
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 14.94,
+        "l1_total": 0.5001581963875943,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 1.168781725888325,
+        "l1_reversal_1m": 0.146979865771812,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 84.5,
+        "l3_mfi": 36.44,
+        "l3_kama": 2.0767
+      }
+    },
+    {
+      "rank": 6,
+      "code": "603336",
+      "name": "宏辉果蔬",
+      "industry": "农业综合",
+      "neutralized_score": 0.3424,
+      "components": {
+        "L1_pct": 90.3,
+        "L2_pct": 96.7,
+        "FF_pct": 44.1,
+        "L3_pct": 73.5
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 9.47,
+        "l1_total": 0.5597487683922834,
+        "l1_ep": 0.000791765637371338,
+        "l1_bp": 0.37811879757556877,
+        "l1_mom_12m": 1.4911242603550297,
+        "l1_reversal_1m": 0.37731733914940024,
+        "ff_score": 50.0,
+        "ff_main_net": 0.0,
+        "l3_total": 81.2,
+        "l3_mfi": 45.65,
+        "l3_kama": 1.902
+      }
+    },
+    {
+      "rank": 7,
+      "code": "603660",
+      "name": "苏州科达",
+      "industry": "IT设备",
+      "neutralized_score": 0.3146,
+      "components": {
+        "L1_pct": 99.4,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 89.3
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 11.2,
+        "l1_total": 0.6875522597147445,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 1.153726708074534,
+        "l1_reversal_1m": 0.44780793319415446,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 86.4,
+        "l3_mfi": 44.52,
+        "l3_kama": 11.9869
+      }
+    },
+    {
+      "rank": 8,
+      "code": "000776",
+      "name": "广发证券",
+      "industry": "证券",
+      "neutralized_score": 0.3139,
+      "components": {
+        "L1_pct": 82.9,
+        "L2_pct": 96.7,
+        "FF_pct": 44.1,
+        "L3_pct": 69.6
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 20.9,
+        "l1_total": 0.5266801552761666,
+        "l1_ep": 0.02781774580335731,
+        "l1_bp": 0.8141094613318561,
+        "l1_mom_12m": 0.3835434638354347,
+        "l1_reversal_1m": 0.10492845786963434,
+        "ff_score": 50.0,
+        "ff_main_net": 0.0,
+        "l3_total": 79.4,
+        "l3_mfi": 36.83,
+        "l3_kama": 0.6989
+      }
+    },
+    {
+      "rank": 9,
+      "code": "603776",
+      "name": "永安行",
+      "industry": "公共交通",
+      "neutralized_score": 0.3046,
+      "components": {
+        "L1_pct": 93.9,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 98.9
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 19.74,
+        "l1_total": 0.5802188288275753,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 0.42056650246305427,
+        "l1_reversal_1m": 0.23766094420600847,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 87.4,
+        "l3_mfi": 40.56,
+        "l3_kama": 1.9607
+      }
+    },
+    {
+      "rank": 10,
+      "code": "002429",
+      "name": "兆驰股份",
+      "industry": "家用电器",
+      "neutralized_score": 0.3025,
+      "components": {
+        "L1_pct": 65.7,
+        "L2_pct": 96.7,
+        "FF_pct": 44.1,
+        "L3_pct": 96.1
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 11.79,
+        "l1_total": 0.4729145792762511,
+        "l1_ep": 0.0034321719792438843,
+        "l1_bp": 0.27693479361596296,
+        "l1_mom_12m": 2.1445221445221447,
+        "l1_reversal_1m": 0.3199608610567515,
+        "ff_score": 50.0,
+        "ff_main_net": 0.0,
+        "l3_total": 87.1,
+        "l3_mfi": 41.45,
+        "l3_kama": 3.1059
+      }
+    },
+    {
+      "rank": 11,
+      "code": "605168",
+      "name": "三人行",
+      "industry": "互联网",
+      "neutralized_score": 0.2923,
+      "components": {
+        "L1_pct": 97.1,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 86.4
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 44.88,
+        "l1_total": 0.6095723925481243,
+        "l1_ep": 0.0008301510874979247,
+        "l1_bp": 0.20640255780654518,
+        "l1_mom_12m": 1.3490639625585024,
+        "l1_reversal_1m": 0.6670357044007749,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 86.0,
+        "l3_mfi": 45.87,
+        "l3_kama": 18.8597
+      }
+    },
+    {
+      "rank": 12,
+      "code": "000592",
+      "name": "平潭发展",
+      "industry": "林业",
+      "neutralized_score": 0.2856,
+      "components": {
+        "L1_pct": 89.1,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 96.1
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 11.08,
+        "l1_total": 0.5532733621994208,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 3.0860927152317883,
+        "l1_reversal_1m": 0.07961504811898523,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 87.1,
+        "l3_mfi": 41.49,
+        "l3_kama": 5.0968
+      }
+    },
+    {
+      "rank": 13,
+      "code": "603881",
+      "name": "数据港",
+      "industry": "软件服务",
+      "neutralized_score": 0.2824,
+      "components": {
+        "L1_pct": 68.8,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 98.9
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 37.3,
+        "l1_total": 0.4813703804411139,
+        "l1_ep": 0.00138217000691085,
+        "l1_bp": 0.103867811545257,
+        "l1_mom_12m": 0.7246722288438614,
+        "l1_reversal_1m": 0.08960843373493965,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 87.4,
+        "l3_mfi": 40.42,
+        "l3_kama": 2.2538
+      }
+    },
+    {
+      "rank": 14,
+      "code": "000710",
+      "name": "贝瑞基因",
+      "industry": "医疗保健",
+      "neutralized_score": 0.2817,
+      "components": {
+        "L1_pct": 68.6,
+        "L2_pct": 96.7,
+        "FF_pct": 91.5,
+        "L3_pct": 31.4
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 12.7,
+        "l1_total": 0.4808005374969663,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": -0.13902439024390245,
+        "l1_reversal_1m": 0.023188405797101463,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 48.9,
+        "l3_mfi": 36.58,
+        "l3_kama": 3.5327
+      }
+    },
+    {
+      "rank": 15,
+      "code": "603936",
+      "name": "博敏电子",
+      "industry": "元器件",
+      "neutralized_score": 0.2722,
+      "components": {
+        "L1_pct": 98.5,
+        "L2_pct": 46.7,
+        "FF_pct": 99.8,
+        "L3_pct": 90.3
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 14.14,
+        "l1_total": 0.6421726276975198,
+        "l1_ep": 0.0069782281978097264,
+        "l1_bp": 0.35247361030697755,
+        "l1_mom_12m": 2.084604715672677,
+        "l1_reversal_1m": 0.6057761732851985,
+        "ff_score": 67.5,
+        "ff_main_net": 392054898.0,
+        "l3_total": 86.5,
+        "l3_mfi": 43.95,
+        "l3_kama": 18.0399
+      }
+    },
+    {
+      "rank": 16,
+      "code": "601061",
+      "name": "中信金属",
+      "industry": "商贸代理",
+      "neutralized_score": 0.2717,
+      "components": {
+        "L1_pct": 78.7,
+        "L2_pct": 96.7,
+        "FF_pct": 44.1,
+        "L3_pct": 92.3
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 15.36,
+        "l1_total": 0.5130228555298547,
+        "l1_ep": 0.01914792092706203,
+        "l1_bp": 0.337036696756757,
+        "l1_mom_12m": 0.9612299465240641,
+        "l1_reversal_1m": 0.22351959966638857,
+        "ff_score": 50.0,
+        "ff_main_net": 0.0,
+        "l3_total": 86.7,
+        "l3_mfi": 43.08,
+        "l3_kama": 1.1204
+      }
+    },
+    {
+      "rank": 17,
+      "code": "600962",
+      "name": "国投中鲁",
+      "industry": "软饮料",
+      "neutralized_score": 0.2681,
+      "components": {
+        "L1_pct": 86.8,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 91.3
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 18.85,
+        "l1_total": 0.5415059812242884,
+        "l1_ep": 0.00065826899634295,
+        "l1_bp": 0.14636526476016357,
+        "l1_mom_12m": 1.0024410089503664,
+        "l1_reversal_1m": 0.2817708333333333,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 86.6,
+        "l3_mfi": 43.76,
+        "l3_kama": 10.5646
+      }
+    },
+    {
+      "rank": 18,
+      "code": "002580",
+      "name": "圣阳股份",
+      "industry": "电气设备",
+      "neutralized_score": 0.2674,
+      "components": {
+        "L1_pct": 80.1,
+        "L2_pct": 96.7,
+        "FF_pct": 44.1,
+        "L3_pct": 91.3
+      },
+      "raw_data": {
+        "buy2_score": 100,
+        "buy2_price": 29.7,
+        "l1_total": 0.5176313191025613,
+        "l1_ep": 0.0037356321839080464,
+        "l1_bp": 0.14785746593058036,
+        "l1_mom_12m": 1.9268292682926824,
+        "l1_reversal_1m": 0.8335089567966278,
+        "ff_score": 50.0,
+        "ff_main_net": 0.0,
+        "l3_total": 86.6,
+        "l3_mfi": 37.55,
+        "l3_kama": 11.8011
+      }
+    },
+    {
+      "rank": 19,
+      "code": "603538",
+      "name": "美诺华",
+      "industry": "化学制药",
+      "neutralized_score": 0.2668,
+      "components": {
+        "L1_pct": 91.1,
+        "L2_pct": 46.7,
+        "FF_pct": 44.1,
+        "L3_pct": 66.0
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 20.87,
+        "l1_total": 0.5620511964840811,
+        "l1_ep": 0.0025,
+        "l1_bp": 0.18530597722960152,
+        "l1_mom_12m": 3.043321299638989,
+        "l1_reversal_1m": 0.1292599314377898,
+        "ff_score": 50.0,
+        "ff_main_net": 0.0,
+        "l3_total": 77.3,
+        "l3_mfi": 32.36,
+        "l3_kama": 0.936
+      }
+    },
+    {
+      "rank": 20,
+      "code": "605133",
+      "name": "嵘泰股份",
+      "industry": "汽车配件",
+      "neutralized_score": 0.2652,
+      "components": {
+        "L1_pct": 85.4,
+        "L2_pct": 46.7,
+        "FF_pct": 91.5,
+        "L3_pct": 83.3
+      },
+      "raw_data": {
+        "buy2_score": 75,
+        "buy2_price": 30.31,
+        "l1_total": 0.5348441143421645,
+        "l1_ep": 0.004325699745547074,
+        "l1_bp": 0.36995792531625854,
+        "l1_mom_12m": 0.5273999222697239,
+        "l1_reversal_1m": 0.37316561844863716,
+        "ff_score": 65.0,
+        "ff_main_net": 0.0,
+        "l3_total": 85.1,
+        "l3_mfi": 44.7,
+        "l3_kama": 11.0657
+      }
+    }
+  ]
+}

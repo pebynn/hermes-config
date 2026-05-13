@@ -1,7 +1,7 @@
 ---
 name: autonomous-optimization-architect
 description: LLM cost optimization, model routing, circuit breaker, and FinOps automation for Hermes Agent. Real Python scripts for session cost tracking, model failover, and config management.
-version: 2.7.0
+version: 2.8.0
 author: Hermes Agent
 tags: [optimization, llm, routing, cost, circuit-breaker, finops, hermes-skill, actionable]
 ---
@@ -415,7 +415,29 @@ Model lives at `data["model"]` in session archives but at
 `data["request"]["body"]["model"]` in request dumps. Always use filename
 patterns (`fpath.name.startswith("request_dump_")`) to branch.
 
-### deepseek-v4-pro is ALWAYS a reasoning model — don't use it for scripts
+### model.default config drift — orchestrator stuck on reasoning model (v2.8, 2026-05-14)
+
+`model.default` must be a non-reasoning model (`deepseek-v4-flash` or `deepseek-chat`) for the orchestrator. Using `deepseek-v4-pro` as default forces every orchestrator turn through hidden CoT — adding 3-5× latency and inflating costs for pure dispatch work.
+
+**Detection**:
+```bash
+grep -A1 '^model:' ~/.hermes/config.yaml | grep default
+# ✓ deepseek-v4-flash or deepseek-chat
+# ✗ deepseek-v4-pro (reasoning — 3-5× slower for orchestration)
+```
+
+This is distinct from worker models (kanban dispatcher overrides per-worker). The orchestrator itself should never use a reasoning model as default.
+
+### compression.enabled relapse (v2.8, 2026-05-14)
+
+Hermes内置压缩引擎有已知bug(tool_calls孤儿+过早触发)。04-30修复为`enabled: false`，但05-14发现又被重新启用。此配置漂移导致用户在<15%上下文使用率时被压缩。
+
+**检测**:
+```bash
+grep -A2 '^compression:' ~/.hermes/config.yaml | grep enabled
+# 必须: enabled: false
+```
+发现`true`立即改回。考虑加入BD层日常审计防止复发。
 
 `deepseek-v4-pro` is a native reasoning model that **always engages thinking
 mode** regardless of `reasoning_effort` config. For script writing, data

@@ -1,0 +1,11 @@
+import pandas as pd
+df = pd.read_parquet('/home/pebynn/.finquant/cache/fund_flow/fund_flow_2026-05-13.parquet')
+print('Shape:', df.shape)
+print('Columns:', list(df.columns))
+print('Non-zero main_net:', (df['main_net'] != 0).sum())
+print('Non-zero main_net_ratio:', (df['main_net_ratio'] != 0).sum())
+print()
+print('Top 10 entries:')
+print(df.head(10).to_string())
+print()
+print('Sample codes:', df['code'].head(5).tolist())

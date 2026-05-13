@@ -1,0 +1,29 @@
+{
+  "role": "reviewer",
+  "target_role": "writer",
+  "task_id": "t_400f94d5",
+  "date": "2026-05-13",
+  "article": "round6_c_audit",
+  "status": "PARTIAL_PASS",
+  "key_findings": [
+    "LEVERAGE=1.0 四重验证通过(代码+配置+测试+JSON)",
+    "未发现前视偏差(未来日期显式排除)",
+    "3组振幅参数产生100%相同交易(CSV SHA256一致)",
+    "振幅无效根因: multiplier=1+net_ratio×amplitude不改变行业相对排序",
+    "胜率60%>45%目标✓, 年化28.91%≪150%目标✗",
+    "PolicyWeight以-3.96pp收益换+13.3pp胜率+1.20pp MDD"
+  ],
+  "R7_directions": [
+    "1.5x-2.0x杠杆(预期40-60%年化)",
+    "日频调仓(与PolicyWeight半衰期5天更好匹配)",
+    "振幅参数修复(行业独立net_ratio)",
+    "概念选股恢复(缩小候选池+PolicyWeight增强)",
+    "半衰期5→15天(跨越月度调仓)",
+    "政策止损弹性"
+  ],
+  "recommended_next": "R7a(1.5x杠杆) + R7b(日频调仓) 并行测试",
+  "structural_verdict": "150%年化在LEVERAGE=1.0+月度调仓约束下大概率不可达(理论上限约30-50%)。需结构性升级。",
+  "diff_from_R4": "+14.17pp年化, +20.0pp胜率",
+  "vs_baseline_no_policy": "PolicyWeight -3.96pp年化, +13.3pp胜率, +1.20pp MDD",
+  "full_audit": "/home/pebynn/.hermes/kanban/boards/evo-c/workspaces/t_400f94d5/output/round6_c_audit.json"
+}

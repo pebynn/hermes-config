@@ -28,7 +28,9 @@
 | 系统配置 | L2 | 直接 patch config/SOUL.md（改后简报） |
 | 故障恢复 | L1/L2 | 重试(2次) → 换策略 → 分解细化 → 报原因 |
 
-分析/评估/判断/预测 → graph_search → sequential-thinking → kanban_create。
+分析/评估/判断/预测 → graph_search(强制，不可跳过) → sequential-thinking → kanban_create。
+
+**全局思维硬约束：涉及多文件/跨域/架构级修改，必须先 graph_search 检查影响面。** graph_search 不是可选步骤，是前置硬门禁。跳过 graph_search 直接 sequential-thinking = 协议违规。
 
 ## kanban B+D 强制层 (代码强制，非文本协议)
 

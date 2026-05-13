@@ -1453,7 +1453,32 @@ This skill (82KB + 46 reference files) has grown beyond usefulness. Core problem
 - `references/browser-publishing.md` — 🆕 浏览器自动化发布微信草稿（Playwright+ProseMirror)+base64图片内嵌+按章节插入+去元数据（2026-05-08验证）
 - `references/chinese-font-rendering.md` — matplotlib/mplfinance 中文字体渲染修复方案（含 .ttc→.ttf 提取）
 - `references/seo-content-optimization.md` — SEO内容优化管线：标题公式/搜一搜关键词/关注转化钩子/轻量数据采集器/小绿书短内容（2026-05-09新增）
+- `references/title-optimization.md` — 🆕 标题优化系统：6大类高CTR公式+质量评分+量化周报零AI标题生成+避坑清单（2026-05-14）
 - `references/qq-notification-pattern.md` — QQ通知共享模块：notify_utils.py + 写作质量审计清单（2026-05-10）
+
+---
+## 🆕 标题优化系统（2026-05-14）
+
+**共享模块**: `~/writing-data/scripts/title_optimizer.py`
+
+统一A股内容管线标题质量，目标提高微信公众号打开率。
+
+### 已集成脚本
+| 脚本 | 方式 | 状态 |
+|:--|:--|:--|
+| generate_review.py | Prompt注入6种公式 | ✅ |
+| generate_review_seo.py | Prompt注入6种公式 | ✅ |
+| weekly_summary.py | Prompt注入4种周刊公式 | ✅ |
+| quant_weekly.py | `generate_quant_weekly_title()` | ✅ (零AI成本) |
+| generate_popular.py | 加了title_optimizer import，quality check注入待完成（pattern不匹配） | 🔧 |
+
+### 核心功能
+- **标题模板**: 每日6类/周刊4类/科普4类高CTR公式
+- **质量评分**: `score_title(title, draft_type)` → 0-100分+警告
+- **量化周报标题**: 零AI成本，数据驱动模板选择
+- **强制避坑**: 禁止日期开头/方括号/财经媒体腔
+
+详见 `references/title-optimization.md`
 
 ---
 

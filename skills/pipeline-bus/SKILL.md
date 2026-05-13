@@ -303,6 +303,10 @@ when-to-use: 跨域传递数据时、开发/修改域间接口时、新增模块
 
 ---
 
+## 参考文件
+
+- `references/kline-schema.md` — stock_kline.kline 表完整Schema，含 total_mv 计算、amount≠总市值混淆、MySQL约束 (2026-05-14)
+
 ## 版本记录
 
 | 版本 | 日期 | 变更 |

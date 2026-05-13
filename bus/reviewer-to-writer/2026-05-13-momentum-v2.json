@@ -1,0 +1,93 @@
+{
+  "source": "reviewer (t_190a2d5a)",
+  "review_date": "2026-05-13",
+  "verdict": "FAIL",
+  "articles": ["strategy_momentum.py", "strategy_momentum_v2.py"],
+  "backtest_csv": "/home/pebynn/quant/backtest_momentum.csv",
+  "issues": [
+    {
+      "severity": "CRITICAL",
+      "category": "data_accuracy",
+      "file": "strategy_momentum.py",
+      "line": 244,
+      "issue": "硬止损出场价使用公式 ep*(1-HARD_STOP)，未使用实际 day_low。128/132笔(97%)精确-8.0%，系统性低估真实亏损",
+      "fix": "将 exit_px 改为 day_low，或 min(day_low, ep*(1-HARD_STOP))"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "target_miss",
+      "issue": "年化收益95.5%(TOP_N=5)或183.5%(TOP_N=3)，均未达300%目标",
+      "fix": "需改进策略参数或因子权重；或重新评估目标合理性"
+    },
+    {
+      "severity": "HIGH",
+      "category": "data_pipeline",
+      "file": "strategy_momentum_v2.py",
+      "line": 153,
+      "issue": "load_data_sina() 列名错误: parquet使用'trade_date'而非'date'，重命名失败导致KeyError",
+      "fix": "改为 'trade_date':'日期' 或使用通用兼容逻辑"
+    },
+    {
+      "severity": "HIGH",
+      "category": "data_accuracy",
+      "file": "strategy_momentum.py",
+      "line": 246,
+      "issue": "移动止盈出场价同样使用公式价 high_c*(1-TRAILING_DISTANCE)，应使用 day_low",
+      "fix": "exit_px = min(day_low, high_c*(1-TRAILING_DISTANCE))"
+    },
+    {
+      "severity": "MEDIUM",
+      "category": "metric_calculation",
+      "file": "reconstruct_nav.py",
+      "line": 13,
+      "issue": "TOP_N=5硬编码，与策略v2的TOP_N=3不匹配，导致年化收益偏差",
+      "fix": "从策略代码读取TOP_N或设为命令行参数"
+    },
+    {
+      "severity": "MEDIUM",
+      "category": "analysis_completeness",
+      "file": "reconstruct_nav.py",
+      "line": 11,
+      "issue": "分析窗口仅2026-01-01→2026-04-30(4个月)，忽略2025-05-07→2025-12-31数据",
+      "fix": "使用完整回测周期计算"
+    },
+    {
+      "severity": "LOW",
+      "category": "survivorship_bias",
+      "file": "strategy_momentum.py",
+      "line": 148,
+      "issue": "股票池未显式过滤已退市股票，存在潜在幸存者偏差",
+      "fix": "在universe构建阶段加入退市日期检查"
+    }
+  ],
+  "independent_metrics": {
+    "total_trades": 324,
+    "win_rate_pct": 44.75,
+    "period": "2025-05-07 → 2026-04-30",
+    "days": 358,
+    "years": 0.98,
+    "annualized_TOP5_pct": 95.48,
+    "annualized_TOP3_pct": 183.51,
+    "profit_factor": 1.31,
+    "hard_stop_count": 132,
+    "formula_stop_exact_8pct": 128,
+    "trailing_profit_count": 102,
+    "dropped_count": 87,
+    "forced_count": 3
+  },
+  "checks": {
+    "future_function": "PASS",
+    "leverage": "PASS (1.0)",
+    "win_rate_formula": "PASS (44.75%)",
+    "annualized_formula": "PASS (formula correct, TOP_N mismatch)",
+    "data_accuracy_mysql": "PASS",
+    "data_accuracy_sina": "BLOCKED (column name bug)",
+    "stop_loss_exit_price": "FAIL (formula-based, not market)",
+    "survivorship_bias": "WARNING (no delisting filter)"
+  },
+  "targets": {
+    "annualized_300pct": false,
+    "win_rate_45_55_pct": false,
+    "overall": false
+  }
+}

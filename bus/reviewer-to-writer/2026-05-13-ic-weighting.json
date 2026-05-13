@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "stream": "reviewer-to-writer",
+    "version": "v1",
+    "producer": "reviewer",
+    "consumer": "writer",
+    "produced_at": "2026-05-13T03:45:00+08:00",
+    "article_title": "B1 研究报告：IC半衰加权因子权重方案对比",
+    "article_path": "/home/pebynn/.hermes/kanban/workspaces/t_0db1b539/research_report.md"
+  },
+  "overall_assessment": {
+    "score": 4,
+    "verdict": "rework",
+    "summary": "需修正后重新审查。核心问题：回测收益基于ex-post IC（未来函数泄漏），年化收益/夏普比率不可实盘复现；次要问题：样本量(~485 vs 462)、回测月数(17 vs 16)两处数字错误，数据源未注明。优点：IC/t值计算自洽，数学定义清晰，无偏见，有诚实局限说明。修正两处挡路项后可升级为PASS。"
+  },
+  "issues": [
+    {
+      "id": "C1",
+      "category": "factual",
+      "severity": "critical",
+      "location": "摘要 + 第4节 方案回测对比",
+      "original_text": "年化收益23.03%、夏普比率1.06、胜率70.6%",
+      "description": "回测收益用 ex-post IC_i(t) 计算。IC_i(t) 需 t+1 月收益率（未来信息），在实盘前向测试中不可复现。将 IC 代理值呈现为'回测收益'具有误导性——读者会误解为实盘可达收益。",
+      "suggestion": "1) 摘要开头加 ⚠️ 醒目警告：'以下收益为IC代理值，需 t+1 月收益率计算，非实盘可复现收益'；2) 第4节标题改为'IC代理收益对比'而非'回测对比'；3) 增加'前向IC收益'列：用 w_i(t) × IC_i(t-1) 计算不含未来信息的对照收益。",
+      "suggested_replacement": null
+    },
+    {
+      "id": "W1",
+      "category": "accuracy",
+      "severity": "major",
+      "location": "2. 数据说明，样本行",
+      "original_text": "每月 ~485只",
+      "description": "与 summary.json 中 '每月中盘样本': 462 不一致。~485 是估计值，462 是实际计算值。偏差约4.4%。",
+      "suggestion": "正文改为确切数字：462。或注明 mean=462, range=[min, max] 使内容更完整。",
+      "suggested_replacement": "每月 462只（中位数，26个月范围450~480）"
+    },
+    {
+      "id": "W2",
+      "category": "accuracy",
+      "severity": "major",
+      "location": "2. 数据说明，回测时段行",
+      "original_text": "2025-01 ~ 2026-04（17个月）",
+      "description": "2025全年12月 + 2026年1-4月4月 = 共16个月，非17。summary.json 中回测时段起始为 2024-12-31，但月度数仍需与正文一致。",
+      "suggestion": "改为16个月",
+      "suggested_replacement": "2025-01 ~ 2026-04（16个月）"
+    },
+    {
+      "id": "W3",
+      "category": "clarity",
+      "severity": "major",
+      "location": "2. 数据说明表",
+      "original_text": "(无数据来源行)",
+      "description": "全文未注明因子值和收益率数据来源（AKShare？Wind？JoinQuant？），影响可复现性。读者无法独立验证。",
+      "suggestion": "在'2. 数据说明'表中增加一行：'数据源 | AKShare (stock_a_lg_indicator) / Sina API' 或实际使用的数据源",
+      "suggested_replacement": "数据源 | AKShare / Sina API"
+    },
+    {
+      "id": "W4",
+      "category": "accuracy",
+      "severity": "minor",
+      "location": "3.1 因子IC明细表，l1_volume_ratio t值",
+      "original_text": "-3.11",
+      "description": "t值舍入差异：-0.0408/(0.0693/sqrt(28))=-3.12，report写-3.11。不影响结论。",
+      "suggestion": "统一精度，建议报告与计算值一致：-3.12",
+      "suggested_replacement": "-3.12"
+    }
+  ],
+  "positive_feedback": [
+    {
+      "location": "全文",
+      "what_works": "学术口吻客观中立，无偏见/杠精语言"
+    },
+    {
+      "location": "3.1 因子IC分析",
+      "what_works": "IC_IR和t值计算自洽，8/8因子可从给定均值/标准差重现"
+    },
+    {
+      "location": "6.4 局限性",
+      "what_works": "诚实列出4项局限（样本小、因子缺失、IC代理、中盘池变化），未粉饰结果"
+    }
+  ],
+  "action_items": [
+    {
+      "priority": "must_fix",
+      "action": "C1: 在摘要/第4节加 ⚠️ 醒目标注'IC代理值，非实盘可复现收益'，增加前向IC收益对照列",
+      "issue_ids": ["C1"]
+    },
+    {
+      "priority": "must_fix",
+      "action": "W1: 样本量~485→改462（取summary.json精确值）",
+      "issue_ids": ["W1"]
+    },
+    {
+      "priority": "must_fix",
+      "action": "W2: 回测月数17→改16",
+      "issue_ids": ["W2"]
+    },
+    {
+      "priority": "should_fix",
+      "action": "W3: 补充数据来源行",
+      "issue_ids": ["W3"]
+    },
+    {
+      "priority": "nice_to_have",
+      "action": "W4: l1_volume_ratio t值 -3.11→-3.12",
+      "issue_ids": ["W4"]
+    }
+  ]
+}

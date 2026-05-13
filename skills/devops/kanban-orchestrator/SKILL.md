@@ -278,6 +278,22 @@ model:
 
 ## Pitfalls
 
+**`boards rm --delete` 不清理文件系统（2026-05-14 已验证）。** `hermes kanban boards rm --delete <slug>` 只清空 board 内的任务数据，但保留 board 目录和空 kanban.db 文件。board 列表读取的是文件系统目录，删除后 board 仍会显示为 `(empty)`。必须手动清理：
+
+```bash
+# 正确做法：两步
+hermes kanban boards rm --delete <slug>
+rm -rf ~/.hermes/kanban/boards/<slug>
+
+# 批量清理非 default 看板
+for slug in $(hermes kanban boards list | tail -n +2 | awk '{print $1}' | grep -v default); do
+    hermes kanban boards rm --delete "$slug"
+    rm -rf ~/.hermes/kanban/boards/"$slug"
+done
+```
+
+归档目录 `_archived/` 同理，删除看板后归档残留需手动 `rm -rf ~/.hermes/kanban/boards/_archived/*`。
+
 **Reassignment vs. new task.** If a reviewer blocks with "needs changes," create a NEW task linked from the reviewer's task — don't re-run the same task with a stern look. The new task is assigned to the original implementer profile.
 
 **Argument order for links.** `kanban_link(parent_id=..., child_id=...)` — parent first. Mixing them up demotes the wrong task to `todo`.
@@ -285,6 +301,8 @@ model:
 **Don't pre-create the whole graph if the shape depends on intermediate findings.** If T3's structure depends on what T1 and T2 find, let T3 exist as a "synthesize findings" task whose own first step is to read parent handoffs and plan the rest. Orchestrators can spawn orchestrators.
 
 **Tenant inheritance.** If `HERMES_TENANT` is set in your env, pass `tenant=os.environ.get("HERMES_TENANT")` on every `kanban_create` call so child tasks stay in the same namespace.
+
+**Board deletion leaves empty directories.** (2026-05-14) `hermes kanban boards rm --delete <slug>` removes task data from the board's SQLite DB but leaves the board directory and empty `kanban.db` file behind. The board still appears in `boards list` with `(empty)` counts. To fully remove: manually `rm -rf ~/.hermes/kanban/boards/<slug>/` after the `rm --delete` command. Also check `_archived/` for accumulated archived board snapshots and clean those with `rm -rf ~/.hermes/kanban/boards/_archived/*` if they're no longer needed.
 
 **Profile bloat kills startup time.** (2026-05-11) Worker profiles overloaded with unused bundled skills (himalaya, google-workspace, linear, codex, touchdesigner-mcp, etc.) increase startup time from ~10s to 60-90s. Audit profiles with `hermes kanban diagnostics` and remove unused skills from profile skills/ directories. Each unnecessary skill directory adds ~2-3s to cold-start. **Formula**: keep only `devops/kanban-worker` in profile skills/ — all domain-specific skills live in `~/.hermes/skills/` and are loaded by task configuration, not profile bundling. Removing 35-65 bundled skills per profile takes disk from MBs to ~200KB and reduces startup by 30-80s.
 
@@ -395,6 +413,10 @@ hermes kanban show t_<id>
 **Fallback: parallel web_search via execute_code.** When deep_research is unavailable, use `execute_code` to batch multiple `web_search() + web_extract()` calls in parallel. This covers 10+ research directions in one tool call (~17s for 10 topics). Combine with `web_extract` on the top 3-5 URLs for deeper content. This pattern achieves ~80% of deep_research coverage at ~20% of the cost.
 
 **Hub cascade fragility.** (2026-05-11) Research confirms: a single bad routing decision by the orchestrator can infect 100% of downstream tasks (vs 9.7-15.9% from leaf errors). Mitigation: always run `prompt-optimizer.infer_domain` before `kanban_create` to validate routing. Log routing rationale in task body for auditability.
+
+**Boards `rm --delete` leaves empty directories.** (2026-05-14) `hermes kanban boards rm --delete <slug>` removes task data but leaves the board directory (`~/.hermes/kanban/boards/<slug>/`) with an empty `kanban.db` file. The board list is filesystem-based, so the stale board still shows up as `(empty)`. Fix: `rm -rf ~/.hermes/kanban/boards/<slug>` after `--delete`. Also clean `_archived/` directory for archived board remnants.
+
+**Cron scripts must live under `~/.hermes/scripts/`.** (2026-05-14) The cron system rejects absolute paths and home-relative paths like `/home/pebynn/quant/signal_a_v2.sh`. Scripts must be placed in `~/.hermes/scripts/` and referenced by filename only. For scripts that need to run in a specific working directory, use `cd /target/dir && exec python3 script.py` inside the wrapper.
 
 ## Cross-Session Result Delivery (2026-05-11)
 

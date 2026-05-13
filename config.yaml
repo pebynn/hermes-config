@@ -1,5 +1,5 @@
 model:
-  default: deepseek-v4-pro
+  default: deepseek-v4-flash
   provider: deepseek
 providers:
   zai:
@@ -53,6 +53,7 @@ terminal:
   container_persistent: true
   docker_volumes: []
   docker_mount_cwd_to_workspace: false
+  docker_extra_args: []
   docker_run_as_host_user: false
   persistent_shell: true
 web:
@@ -97,16 +98,19 @@ tool_loop_guardrails:
     same_tool_failure: 8
     idempotent_no_progress: 5
 compression:
-  enabled: true
+  enabled: false
   threshold: 0.7
   target_ratio: 0.3
   protect_last_n: 50
   hygiene_hard_message_limit: 400
 prompt_caching:
   cache_ttl: 5m
+  long_lived_prefix: true
+  long_lived_ttl: 1h
 openrouter:
   response_cache: true
   response_cache_ttl: 300
+  min_coding_score: 0.65
 bedrock:
   region: ''
   discovery:
@@ -196,6 +200,7 @@ display:
   bell_on_complete: false
   show_reasoning: false
   streaming: true
+  timestamps: false
   final_response_markdown: strip
   persistent_output: true
   persistent_output_max_lines: 200
@@ -357,13 +362,17 @@ approvals:
   timeout: 60
   cron_mode: deny
   mcp_reload_confirm: true
+  destructive_slash_confirm: false
 command_allowlist:
 - recursive delete
-- git *
-- pip install *
-- npm install *
-- echo * >> *
 - source *
+- script execution via -e/-c flag
+- pip install *
+- echo * >> *
+- npm install *
+- find -delete
+- git *
+- script execution via heredoc
 quick_commands: {}
 hooks: {}
 hooks_auto_accept: false
@@ -379,6 +388,8 @@ security:
     enabled: false
     domains: []
     shared_files: []
+  acked_advisories: []
+  allow_lazy_installs: true
 cron:
   wrap_response: true
   max_parallel_jobs: 3
@@ -403,7 +414,7 @@ network:
   force_ipv4: false
 sessions:
   auto_prune: true
-  retention_days: 90
+  retention_days: 7
   vacuum_after_prune: true
   min_interval_hours: 24
 onboarding:

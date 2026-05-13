@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "stream": "reviewer-to-writer",
+    "version": "v1",
+    "producer": "reviewer",
+    "consumer": "writer",
+    "produced_at": "2026-05-13T19:25:00",
+    "article_title": "策略C R2回测审计报告",
+    "article_path": "/home/pebynn/quant/strategies/strategy_c_policy/output/round2_c_audit.json"
+  },
+  "overall_assessment": {
+    "score": 6,
+    "verdict": "rework",
+    "summary": "策略C R2大幅改善(年化-15.35→+24.80%, Sharpe -0.67→+1.10, NAV 0.8719→1.0748)但未达目标(年化150%+/胜率45%+)。6项代码修复全部实施，5项验证通过。核心Alpha源(MCP/EastMoney概念选股)仍待接通，是未达目标的主因。建议继续迭代R3。"
+  },
+  "issues": [
+    {
+      "id": "R2-01",
+      "category": "factual",
+      "severity": "major",
+      "description": "MCP概念选股和EastMoney fallback均在运行时失败，策略C的核心差异化Alpha源未生效，策略退化为基础因子排名。",
+      "suggestion": "排查EastMoney API连通性(IPv4强制已实现但可能被限流/封IP)。考虑增加akshare/ths概念数据作为第二fallback。"
+    },
+    {
+      "id": "R2-02",
+      "category": "structure",
+      "severity": "minor",
+      "description": "月度调仓+每日≤3只的分批建仓组合导致交易频率偏低(82日仅15笔)。月度窗口仅当天可入场，限制了建仓机会。",
+      "suggestion": "考虑在月度调仓窗口内允许2-3天分批建仓，或增加非调仓日资金流信号入场。"
+    },
+    {
+      "id": "R2-03",
+      "category": "factual",
+      "severity": "minor",
+      "description": "回测期仅82个交易日(2026-01~05)，样本量不足以验证策略鲁棒性。",
+      "suggestion": "延长回测期至2024-2026覆盖牛熊周期，或进行walk-forward验证。"
+    }
+  ],
+  "positive_feedback": [
+    {"location": "整体", "what_works": "6/6项代码修复落地，风控指标全面改善。Sharpe 1.10优秀，最大回撤-10.01%较R1减半。组合止损从115次降至6次(-94.8%)。双份代码已清理，JSON输出已实现。"},
+    {"location": "月度调仓", "what_works": "is_rebalance_day()月度逻辑正确，14批次→6批次，调仓频率根治。"},
+    {"location": "分批建仓", "what_works": "max_new_per_batch=3有效控制单日风险，过度交易和频繁止损问题根治。"},
+    {"location": "NAV恢复", "what_works": "NAV从0.8719恢复至1.0748，策略已从亏损翻转为盈利。"}
+  ],
+  "action_items": [
+    {
+      "priority": "must_fix",
+      "action": "修复MCP/EastMoney概念数据连通性——策略C的Alpha源恢复是达成目标的必要条件",
+      "issue_ids": ["R2-01"]
+    },
+    {
+      "priority": "should_fix",
+      "action": "适度放宽月度窗口内的建仓天数(2-3天)以提升交易频率和仓位利用率",
+      "issue_ids": ["R2-02"]
+    },
+    {
+      "priority": "nice_to_have",
+      "action": "延长回测期验证策略鲁棒性",
+      "issue_ids": ["R2-03"]
+    }
+  ]
+}

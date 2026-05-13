@@ -1,0 +1,24 @@
+{
+  "source": "reviewer",
+  "target": "writer",
+  "timestamp": "2026-05-13T18:56:08.231945",
+  "article": "strategy_c_policy_round1",
+  "audit_path": "/home/pebynn/quant/strategies/strategy_c_policy/output/round1_c_audit.json",
+  "verdict": "FAIL",
+  "blocking_issues": [
+    "MCP概念选股完全失效 — 策略核心Alpha来源缺失",
+    "月度调仓退化为周度调仓 — rebalance_weekly配置被忽略",
+    "64%入场批次全部亏损 — 仓位管理和入场时机需重新设计"
+  ],
+  "required_fixes": [
+    "修复MCP stock-sdk-mcp集成或实现概念数据fallback",
+    "将调仓频率从周度改为月度",
+    "实现分批建仓，避免一次性满仓10只",
+    "删除多余 shared/ 目录统一代码"
+  ],
+  "positive": [
+    "LEVERAGE=1.0 严格执行",
+    "NAV计算使用prev_close方法正确",
+    "未发现未来函数"
+  ]
+}

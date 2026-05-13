@@ -12,7 +12,7 @@ trigger:
 - 当前会话超过30次工具调用时
 - 子代理返回结果超过5KB时
 - 用户连续下达3个以上指令时
-version: 1.3.0
+version: 1.4.0
 ---
 
 # 上下文压缩协议
@@ -56,6 +56,18 @@ compression:
   target_ratio: 0.2      # 保留
   protect_last_n: 50     # 如重新启用，保护最近 50 轮消息不压缩
 ```
+
+### ⚠️ 复发陷阱（2026-05-14 确认）
+
+04-30修复后compression曾被重新启用(enabled: true, threshold: 0.7)，导致用户在极低上下文使用率(<15%)时触发压缩。这是已知bug的复发——内置引擎在远低于threshold时也触发压缩。
+
+**必须的验证命令**（每次系统自检时执行）：
+```bash
+grep -A2 '^compression:' ~/.hermes/config.yaml | grep enabled
+# 必须输出: enabled: false
+```
+
+如果发现enabled: true，立即改回false。**这个bug被多次修复又被多次意外回滚。考虑在BD层或rule_audit.py中增加compression状态检查，防止再次复发。**
 
 ### 替代的手动压缩（本技能推荐方案）
 

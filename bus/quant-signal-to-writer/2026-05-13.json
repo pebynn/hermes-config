@@ -1,0 +1,28 @@
+{
+  "date": "2026-05-13",
+  "pipeline": "P4-推送QQBot",
+  "zz500_change": 2.35,
+  "top3": [
+    {
+      "code": "600737",
+      "name": "中粮糖业",
+      "rank": 1,
+      "score": 0.4947
+    },
+    {
+      "code": "603269",
+      "name": "海鸥股份",
+      "rank": 2,
+      "score": 0.4115
+    },
+    {
+      "code": "000066",
+      "name": "中国长城",
+      "rank": 3,
+      "score": 0.4026
+    }
+  ],
+  "total_stocks": 1078,
+  "industry_coverage": 19,
+  "notify_sent": true
+}

@@ -1,0 +1,39 @@
+{
+  "source": "reviewer",
+  "target": "writer",
+  "date": "2026-05-13",
+  "article": "round1_A_audit",
+  "flow": "DS-03",
+  "audit_result": {
+    "pass": true,
+    "confidence": "high",
+    "issues_count": 5,
+    "critical_issues": 0
+  },
+  "suggestions": [
+    {
+      "priority": "medium",
+      "title": "修复NAV入场日收益丢失",
+      "detail": "新入场头寸在入场当日开盘→收盘收益未计入NAV（第293行更新positions，第298-311行NAV用prev_positions快照），导致首日收益系统性丢失，方向取决于入场日平均收益符号。修复建议：在positions更新后重新计算当日NAV，或使用加权平均法将首日收益回填。",
+      "code_locations": ["strategy_momentum.py:293-311"]
+    },
+    {
+      "priority": "medium",
+      "title": "TP止盈逻辑未触发",
+      "detail": "6笔PnL>30%交易均以trailing_profit离场，无TP记录。需排查是设计如此（单日high未触及tp1_trigger）还是代码缺陷（pos_weight变量在TP1修改后未同步到TP2检查）。",
+      "code_locations": ["strategy_momentum.py:185-203"]
+    },
+    {
+      "priority": "low",
+      "title": "输出文件名与代码不一致",
+      "detail": "代码配置OUTPUT_FILE='backtest_A.csv'，实际产出backtest_momentum.csv",
+      "code_locations": ["strategy_momentum.py:34"]
+    },
+    {
+      "priority": "low",
+      "title": "数据源标注过于简略",
+      "detail": "data_source仅标注'mysql'，未记录fallback链和具体表名",
+      "code_locations": ["round1_A_results.json:12"]
+    }
+  ]
+}

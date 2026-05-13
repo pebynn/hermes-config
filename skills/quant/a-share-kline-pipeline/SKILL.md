@@ -22,7 +22,7 @@ name: a-share-kline-pipeline
 related_skills:
 - finance-domain
 - mid-cap-multi-factor
-version: 2.9.0
+version: 2.10.0
 when-to-use: '用户说"拉取A股K线数据"、"下载日线数据"、"更新股票数据"、
 
   "历史K线批量下载"、"从2020年开始拉K线"、"把K线存到数据库"、
@@ -202,6 +202,7 @@ NODE_PATH=/home/pebynn/.hermes/node/lib/node_modules \
 | `~/quant/data_bridge.py` | 🆕 量化→写作数据桥 | 只读接口: get_daily_signals / get_top_stocks / get_market_summary. MySQL(主)→JSON(/tmp/midcap_signal.json)→fallback |
 | `scripts/stock_sdk_backfill.js` | 🆕 **stock-sdk 全量回填MySQL** (Node.js) | `NODE_PATH=... node scripts/stock_sdk_backfill.js --start=20200101` |
 | `scripts/parquet_patch_mysql.py` | 🆕 **parquet→MySQL pct_chg补丁** (Python/LOAD DATA) | `~/tools/quant_env/bin/python3 scripts/parquet_patch_mysql.py` |
+| `scripts/backfill_total_mv.py` | 🆕 **total_mv 回填脚本** — 逐代码 UPDATE，295万行~5分钟 | `~/tools/quant_env/bin/python3 scripts/backfill_total_mv.py` |
 
 ### 缓存目录
 
@@ -210,6 +211,8 @@ NODE_PATH=/home/pebynn/.hermes/node/lib/node_modules \
 ├── kline/           # K线 parquet (per-stock, {code}.parquet)
 ├── financial/       # 财务数据 parquet (per-stock)
 ├── shares/          # 总股本数据库 (share_db.parquet)
+├── data/            # 🆕 静态数据映射
+│   └── total_shares.json  # 全A股总股本映射 (5515只, 用于计算total_mv)
 ├── stocks/          # 股票列表 (stock_list.parquet)
 └── tushare/         # tushare 专用缓存
     ├── kline/       # tushare daily K线
@@ -244,7 +247,7 @@ NODE_PATH=/home/pebynn/.hermes/node/lib/node_modules \
 | pct_chg | decimal(8,2) | 涨跌幅% |
 | change | decimal(8,2) | 涨跌额（注意是MySQL保留字，需用反引号） |
 | turnover | decimal(12,10) | 换手率 |
-| source | varchar(16) | 数据来源标记 (v2.5+): tushare / akshare / xueqiu / NULL(历史数据) |
+| total_mv | decimal(16,2) | 总市值(亿元) = close × totalShares / 1e8。v2.10新增 |
 
 ### 参考文档
 
@@ -267,6 +270,7 @@ NODE_PATH=/home/pebynn/.hermes/node/lib/node_modules \
 | `references/fallback-resolver-and-data-bridge.md` | 🆕 晚间感知三源回退(flallback_resolver.py) + 量化→写作数据桥(data_bridge.py) |
 | `references/akshare-unavailable-2026-05-08.md` | 🆕 AKShare环境不可用诊断报告 + 可用替代源 + 验证脚本 |
 | `references/em-fund-flow-financial-pipeline.md` | 🆕 东方财富资金流 + 财务数据缓存管线（字段映射/已知问题/分页限制） |
+| `references/total-mv-backfill.md` | 🆕 **total_mv 回填手册** — stock-sdk总股本提取 / 295万行回填流程 / CDR补漏 / 每日增量集成 |
 
 ## 数据质量保障 (2026-05-07 审计，当日修复)
 
@@ -474,7 +478,9 @@ After pre-caching, the industry scoring runs at 2.0-2.2 it/s (per-period speed d
 | **backfill_today_mysql.py NaN→0 静默数据污染 (2026-05-07发现)** | `backfill_today_mysql.py L49-57` 将 open/close/high/low/amount 等列的 NaN 全部转为 0 再插入 MySQL，无任何告警。若 parquet 数据缺失则 MySQL 被静默污染为 0 值 | 保留 NaN，仅 volume 特殊处理。所有列如果为 NaN 记录告警日志。详见 references/data-quality-audit-2026-05-07.md |
 | **Tushare成功时不做交叉验证 (2026-05-07发现)** | `daily_kline_update.py L466` Tushare bulk 成功后直接使用数据，不再调用 AKShare 对比。两源数据差异（如振幅公式不同、单位转换错误）无法被及时发现 | 随机抽样 50-100 只用 AKShare 对比 close，差异 >0.5% 告警不阻断。详见 references/data-quality-audit-2026-05-07.md |
 | **Xueqiu API `error_code: 0` = 成功 (2026-05-07)** | 雪球 API 用 `error_code: 0` 表示成功，非零表示错误。`if \"error_code\" in data` 会把成功当错误抛出 | `if data.get(\"error_code\", 0) != 0` 显式检查非零。xueqiu_kline.py `_api_get()` |
-| **雪球成交额估算 (2026-05-08)** | 雪球API不提供成交额(amount)，precache_xueqiu.py用 close×volume 估算 | 差值可能在除权日较大，不影响策略（策略用 close/volume，amount仅参考） |\n| **雪球Web发布被React反自动化拦截 (2026-05-07)** | Playwright headless 填写编辑器成功但点击`a.submit__confirm__btn`被React拦截，即使非headless也不生效 | 降级为本地Markdown备份到 `~/writing-data/xueqiu-backups/`，手动发布 |
+| **雪球成交额估算 (2026-05-08)** | 雪球API不提供成交额(amount)，precache_xueqiu.py用 close×volume 估算 | 差值可能在除权日较大，不影响策略（策略用 close/volume，amount仅参考） |
+| **CDR股票(689xxx)漏 total_mv (2026-05-14)** | stock-sdk `get_all_a_share_quotes` 不返回CDR股票的 totalShares，导致 total_mv 为 NULL | 用 `get_quotes_by_query(["689009"])` 单独拉取，手动补入 `data/total_shares.json`。详见 `references/total-mv-backfill.md` |
+| **tushare daily_basic 无权限 (2026-05-14)** | 用户tushare账户仅 `daily` 接口可用，`daily_basic`/`trade_cal` 无权限，`stock_basic` 限5次/天 | 总市值走 stock-sdk 快照方案；交易日判断走新浪/东财API |\n| **雪球Web发布被React反自动化拦截 (2026-05-07)** | Playwright headless 填写编辑器成功但点击`a.submit__confirm__btn`被React拦截，即使非headless也不生效 | 降级为本地Markdown备份到 `~/writing-data/xueqiu-backups/`，手动发布 |
 
 ## 速度瓶颈已解决: tushare bulk daily (v2.0, 雪球回退 v2.1)
 

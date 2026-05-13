@@ -9,7 +9,7 @@ author: unknown
 description: 主动健康检查 — 验证所有能力域的可运行性和数据新鲜度
 name: self-diagnosis
 schedule: 0 5 * * 1
-version: 1.10.0
+version: 1.11.0
 ---
 
 # 自诊断健康检查
@@ -373,6 +373,9 @@ systemd 的 Restart 策略会使 kill 进程无效——必须 disable 服务本
 | 包装脚本存在 | `which hermes-evolve` | 可执行 |
 | dry-run 验证 | `HERMES_AGENT_REPO=/home/pebynn/.hermes hermes-evolve --skill finance-domain --dry-run 2>&1 \| grep 'DRY RUN'` | 返回 setup validated 信息 |
 | Cron 任务存在 | `cronjob list 2>&1 \| grep '自我进化'` | 任务存在且启用 |
+| **evo-autonomous-orchestrator 未暂停** (v1.11) | `cronjob list 2>&1 \| python3 -c "import sys,json; jobs=json.load(sys.stdin); evo=[j for j in jobs if 'evo-autonomous' in j.get('name','')]; print('PAUSED' if evo and not evo[0].get('enabled') else 'OK')"` | OK（自进化管线不能停） |
+| compression 未复发 (v1.11) | `grep -A2 '^compression:' ~/.hermes/config.yaml \| grep enabled` | 输出必须是 `enabled: false` |
+| model.default 非 reasoning 模型 (v1.11) | `grep -A1 '^model:' ~/.hermes/config.yaml \| grep default` | 应为 flash/chat 而非 pro（orchestrator 不需要 reasoning） |
 
 ### 19. 安全审计工具健康
 
@@ -429,6 +432,7 @@ MCP server 是独立进程，环境变量在 gateway 启动时快照。修改 `.
 | 检查项 | 方法 | 通过条件 |
 |:------|:----|:--------|
 | 逐个连通测试 | 对每个 MCP server 调用基础工具（如 `mcp_github_get_me`、`mcp_time_get_current_time`、`mcp_mysql_test_connection`） | 返回正常数据 |
+| MySQL 浏览器面板 | `scripts/db_viewer.py` — 轻量 Web 数据库浏览器（http://localhost:8899），需 quant_env Python（`~/tools/quant_env/bin/python3`） | 表列表/分页浏览/排序可用 |
 | TAVILY 依赖 server | deep-research 和 web-search 实测搜索 | 返回结果而非 "TAVILY_API_KEY not set" |
 | graphify 数据存在 | `ls ~/brain/graphify-out/graph.json` | 文件存在（不是 /tmp/hermes-graph/）|
 | 环境变量可达 MCP | `echo $TAVILY_API_KEY \| wc -c` | > 20 |
